@@ -1,20 +1,22 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.10;
 
-import {IERC4626, IERC4626RouterBase, ERC20} from "./interfaces/IERC4626RouterBase.sol";
+import {IYearn4626, IYearn4626RouterBase} from "./interfaces/IYearn4626RouterBase.sol";
+import {ERC20} from "solmate/tokens/ERC20.sol";
 import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
 
+import {WithdrawalStack} from "./WithdrawalStack.sol";
 import {SelfPermit} from "./external/SelfPermit.sol";
 import {Multicall} from "./external/Multicall.sol";
 import {PeripheryPayments, IWETH9} from "./external/PeripheryPayments.sol";
 
 /// @title ERC4626 Router Base Contract
-abstract contract ERC4626RouterBase is IERC4626RouterBase, SelfPermit, Multicall, PeripheryPayments {
+abstract contract Yearn4626RouterBase is IYearn4626RouterBase, WithdrawalStack, SelfPermit, Multicall, PeripheryPayments {
     using SafeTransferLib for ERC20;
 
-    /// @inheritdoc IERC4626RouterBase
+    /// @inheritdoc IYearn4626RouterBase
     function mint(
-        IERC4626 vault,
+        IYearn4626 vault,
         address to,
         uint256 shares,
         uint256 maxAmountIn
@@ -24,9 +26,9 @@ abstract contract ERC4626RouterBase is IERC4626RouterBase, SelfPermit, Multicall
         }
     }
 
-    /// @inheritdoc IERC4626RouterBase
+    /// @inheritdoc IYearn4626RouterBase
     function deposit(
-        IERC4626 vault,
+        IYearn4626 vault,
         address to,
         uint256 amount,
         uint256 minSharesOut
@@ -36,9 +38,9 @@ abstract contract ERC4626RouterBase is IERC4626RouterBase, SelfPermit, Multicall
         }
     }
 
-    /// @inheritdoc IERC4626RouterBase
+    /// @inheritdoc IYearn4626RouterBase
     function withdraw(
-        IERC4626 vault,
+        IYearn4626 vault,
         address to,
         uint256 amount,
         uint256 maxSharesOut
@@ -48,9 +50,9 @@ abstract contract ERC4626RouterBase is IERC4626RouterBase, SelfPermit, Multicall
         }
     }
 
-    /// @inheritdoc IERC4626RouterBase
+    /// @inheritdoc IYearn4626RouterBase
     function redeem(
-        IERC4626 vault,
+        IYearn4626 vault,
         address to,
         uint256 shares,
         uint256 minAmountOut

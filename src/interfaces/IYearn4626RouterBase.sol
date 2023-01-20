@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.10;
 
-import "./IERC4626.sol";
+import "./IYearn4626.sol";
 
 /** 
  @title ERC4626Router Base Interface
@@ -16,7 +16,7 @@ import "./IERC4626.sol";
  The router makes no special considerations for unique ERC20 implementations such as fee on transfer. 
  There are no built in protections for unexpected behavior beyond enforcing the minSharesOut is received.
  */
-interface IERC4626RouterBase {
+interface IYearn4626RouterBase {
     /************************** Errors **************************/
 
     /// @notice thrown when amount of assets received is below the min set by caller
@@ -43,7 +43,7 @@ interface IERC4626RouterBase {
      @dev throws MaxAmountError   
     */
     function mint(
-        IERC4626 vault,
+        IYearn4626 vault,
         address to,
         uint256 shares,
         uint256 maxAmountIn
@@ -61,7 +61,7 @@ interface IERC4626RouterBase {
      @dev throws MinSharesError   
     */
     function deposit(
-        IERC4626 vault,
+        IYearn4626 vault,
         address to,
         uint256 amount,
         uint256 minSharesOut
@@ -79,7 +79,7 @@ interface IERC4626RouterBase {
      @dev throws MaxSharesError   
     */
     function withdraw(
-        IERC4626 vault,
+        IYearn4626 vault,
         address to,
         uint256 amount,
         uint256 minSharesOut
@@ -97,7 +97,7 @@ interface IERC4626RouterBase {
      @dev throws MinAmountError   
     */
     function redeem(
-        IERC4626 vault,
+        IYearn4626 vault,
         address to,
         uint256 shares,
         uint256 minAmountOut

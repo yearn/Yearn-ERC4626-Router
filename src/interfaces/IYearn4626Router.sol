@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.10;
 
-import "./IERC4626.sol";
+import "./IYearn4626.sol";
 
 /** 
  @title ERC4626Router Interface
  @notice Extends the ERC4626RouterBase with specific flows to save gas
  */
-interface IERC4626Router {
+interface IYearn4626Router {
     /************************** Deposit **************************/
 
     /** 
@@ -20,7 +20,7 @@ interface IERC4626Router {
      @dev throws MinSharesError   
     */
     function depositToVault(
-        IERC4626 vault,
+        IYearn4626 vault,
         address to,
         uint256 amount,
         uint256 minSharesOut
@@ -35,7 +35,7 @@ interface IERC4626Router {
      @dev throws MinSharesError   
     */
     function depositMax(
-        IERC4626 vault,
+        IYearn4626 vault,
         address to,
         uint256 minSharesOut
     ) external payable returns (uint256 sharesOut);
@@ -54,8 +54,8 @@ interface IERC4626Router {
      @dev throws MaxSharesError, MinSharesError 
     */
     function withdrawToDeposit(
-        IERC4626 fromVault,
-        IERC4626 toVault,
+        IYearn4626 fromVault,
+        IYearn4626 toVault,
         address to,
         uint256 amount,
         uint256 maxSharesIn,
@@ -75,8 +75,8 @@ interface IERC4626Router {
      @dev throws MinAmountError, MinSharesError   
     */
     function redeemToDeposit(
-        IERC4626 fromVault,
-        IERC4626 toVault,
+        IYearn4626 fromVault,
+        IYearn4626 toVault,
         address to,
         uint256 shares,
         uint256 minSharesOut
@@ -91,7 +91,7 @@ interface IERC4626Router {
      @dev throws MinAmountError   
     */
     function redeemMax(
-        IERC4626 vault,
+        IYearn4626 vault,
         address to,
         uint256 minAmountOut
     ) external payable returns (uint256 amountOut);
