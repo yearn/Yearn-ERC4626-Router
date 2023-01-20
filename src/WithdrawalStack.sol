@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.10;
 
+import {IYearn4626} from "./interfaces/IYearn4626.sol";
+import {IWithdrawalStack} from "./interfaces/IWithdrawalStack.sol";
+
 /// @title Withdrawal Stack Contract for YearnV3 Router
-abstract contract WithdrawalStack {
+abstract contract WithdrawalStack is IWithdrawalStack {
 
     address public governance;
     address public pendingGovernance;
@@ -11,30 +14,94 @@ abstract contract WithdrawalStack {
 
     mapping(address => address[]) public withdrawalStack;
 
-    event NewPendingGovernance(
-        address pendingGovernnace
-    );
+    modifier onlyGovernance() {
+        checkGovernance();
+        _;
+    }
 
-    event UpdateGovernance(
-        address newGovernance
-    );
+    function checkGovernance() internal view {
+        if(msg.sender != governance) revert NotAuthorized();
+    }
 
     constructor() {
         governance == msg.sender;
     }
+
+    function addStrategy(address vault, address strategy) external onlyGovernance {
+        // we assume the vault has checked what needs to be
+        if(IYearn4626(vault).strategies(strategy).activation == 0) revert NotActive();
     
+        // make sure we have room left
+        if(withdrawalStack[vault].length >= MAX_WITHDRAWAL_STACK_SIZE) revert StackSize();
+
+        // add strategy to the end of the array
+        withdrawalStack[vault].push(strategy);
+
+        emit StrategyAdded(vault, strategy);
+    }
+    
+    function removeStrategy(address vault, address strategy) external {
+        // allow for permisionless removal if the strategy has been revoked from the vault
+        if(IYearn4626(vault).strategies(strategy).activation != 0) checkGovernance();
+
+        address[] memory currentStack = withdrawalStack[vault];
+
+        for(uint256 i; i < currentStack.length; ++i) {
+            address _strategy = currentStack[i];
+            if(_strategy == strategy) {
+                if(i != currentStack.length - 1) {
+                    // if it isn't already the last strategy, swap the last stategy with the one to remove
+                    address strategyToSwap = currentStack[currentStack.length - 1];
+                    currentStack[i] = strategyToSwap;
+                }
+
+                // store the updated stack
+                withdrawalStack[vault] = currentStack;
+                // pop off the last item
+                withdrawalStack[vault].pop();
+
+                emit StrategyRemoved(vault, strategy);
+                break;
+            }
+        }
+    }
+    
+    function replaceWithdrawalStackIndex(address vault, uint256 idx, address newStrategy) external onlyGovernance {
+        if(IYearn4626(vault).strategies(newStrategy).activation == 0) revert NotActive();
+
+        address oldStrategy = withdrawalStack[vault][idx];
+        require(oldStrategy != newStrategy, "same strategy");
+
+        withdrawalStack[vault][idx] = newStrategy;
+
+        emit ReplacedWithdrawalStackIndex(vault, oldStrategy, newStrategy);
+    }
+
+    function setWithdrawalStack(address vault, address[] memory newStack) external onlyGovernance {
+        if(newStack.length > MAX_WITHDRAWAL_STACK_SIZE) revert StackSize();
+
+        IYearn4626 _vault = IYearn4626(vault);
+
+        for(uint256 i; i < newStack.length; ++i) {
+            if(_vault.strategies(newStack[i]).activation == 0) revert NotActive();
+        }
+
+        withdrawalStack[vault] = newStack;
+
+        emit NewWithdrawStack(vault, newStack);
+    }
+
     function getWithdrawalStack(address vault) public view returns(address[] memory) {
         return withdrawalStack[vault];
     }
 
-    function setGovernance(address newGovernance) external {
-        require(msg.sender == governance, "!auth");
+    function setGovernance(address newGovernance) external onlyGovernance {
         emit NewPendingGovernance(newGovernance);
         pendingGovernance = newGovernance;
     }
 
     function acceptGovernance() external {
-        require(msg.sender == pendingGovernance, "!auth");
+        if(msg.sender != pendingGovernance) revert NotAuthorized();
         governance = msg.sender;
         emit UpdateGovernance(msg.sender);
         pendingGovernance = address(0);

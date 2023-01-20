@@ -36,4 +36,22 @@ contract MockYearn4626 is MockERC4626 {
     ) public returns (uint256 assets){
       return redeem(shares, receiver, owner);
     }
+
+    function addStrategy(address strategy) external {
+        strategies[strategy] = StrategyParams(
+            block.timestamp,
+            block.timestamp,
+            0,
+            0
+        );
+    }
+
+    function removeStrategy(address strategy) external {
+        strategies[strategy] = StrategyParams(
+            0,
+            0,
+            0,
+            0
+        );
+    }
 }

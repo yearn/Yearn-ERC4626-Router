@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.10;
 
-import {IYearn4626, IYearn4626RouterBase} from "./interfaces/IYearn4626RouterBase.sol";
+import {IYearn4626RouterBase} from "./interfaces/IYearn4626RouterBase.sol";
 import {ERC20} from "solmate/tokens/ERC20.sol";
 import {SafeTransferLib} from "solmate/utils/SafeTransferLib.sol";
 
-import {WithdrawalStack} from "./WithdrawalStack.sol";
+import {WithdrawalStack, IYearn4626} from "./WithdrawalStack.sol";
 import {SelfPermit} from "./external/SelfPermit.sol";
 import {Multicall} from "./external/Multicall.sol";
 import {PeripheryPayments, IWETH9} from "./external/PeripheryPayments.sol";
