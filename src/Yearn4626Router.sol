@@ -6,7 +6,7 @@ import "./Yearn4626RouterBase.sol";
 import {ENSReverseRecord} from "./utils/ENSReverseRecord.sol";
 import {IYearn4626Router} from "./interfaces/IYearn4626Router.sol";
 
-/// @title ERC4626Router contract
+/// @title Yearn4626Router contract
 contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRecord {
     using SafeTransferLib for ERC20;
 

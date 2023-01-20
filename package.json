@@ -1,14 +1,14 @@
 {
-  "name": "@fei-protocol/erc4626",
+  "name": "@yearn/erc4626router",
   "license": "AGPL-3.0-only",
   "version": "0.0.0",
-  "description": "ERC4626 infrastructure such as the ERC4626Router and xERC4626",
+  "description": "ERC4626 Router for Yearn V3 vaults",
   "files": [
     "src/**/*.sol"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fei-protocol/ERC4626.git"
+    "url": "git+https://github.com/Schlagonia/Yearn-ERC4626-Router.git"
   },
   "devDependencies": {
     "prettier": "^2.3.1",
@@ -17,7 +17,7 @@
   "scripts": {
     "lint": "prettier --write src/**/*.sol"
   },
-  "homepage": "https://github.com/fei-protocol/ERC4626/blob/main/README.md",
+  "homepage": "https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/README.md",
   "keywords": [
     "erc4626",
     "blockchain",

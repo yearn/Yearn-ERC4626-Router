@@ -69,16 +69,4 @@ Importing via [forge](https://github.com/gakonst/foundry/tree/master/forge): `fo
 Examples:
 * [Tribe Turbo - TurboRouter](https://github.com/fei-protocol/tribe-turbo/blob/main/src/TurboRouter.sol)
 
-## xERC4626
-An "xToken" popularized by SushiSwap with xSUSHI is a single-sided autocompounding token rewards module.
 
-xTokens were improved upon by Zephram Lou with [xERC20](https://github.com/ZeframLou/playpen/blob/main/src/xERC20.sol) to include manipulation resistant reward distributions.
-
-Because xTokens are a perfect use case of ERC-4626, a base utility called xERC4626 is included in this repo. 
-
-xERC4626 improvements:
-* 4626 complete interface compatibility
-* completely internal accounting to prevent all forms of exchange rate manipulation
-
-xERC4626 examples:
-* [xTRIBE](https://github.com/fei-protocol/xTRIBE/blob/master/src/xTRIBE.sol)

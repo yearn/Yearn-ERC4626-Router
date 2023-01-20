@@ -45,7 +45,7 @@ abstract contract Yearn4626RouterBase is IYearn4626RouterBase, WithdrawalStack, 
         uint256 amount,
         uint256 maxSharesOut
     ) public payable virtual override returns (uint256 sharesOut) {
-        if ((sharesOut = vault.withdraw(amount, to, msg.sender)) > maxSharesOut) {
+        if ((sharesOut = vault.withdraw(amount, to, msg.sender, withdrawalStack[address(vault)])) > maxSharesOut) {
             revert MaxSharesError();
         }
     }
@@ -57,7 +57,7 @@ abstract contract Yearn4626RouterBase is IYearn4626RouterBase, WithdrawalStack, 
         uint256 shares,
         uint256 minAmountOut
     ) public payable virtual override returns (uint256 amountOut) {
-        if ((amountOut = vault.redeem(shares, to, msg.sender)) < minAmountOut) {
+        if ((amountOut = vault.redeem(shares, to, msg.sender, withdrawalStack[address(vault)])) < minAmountOut) {
             revert MinAmountError();
         }
     }
