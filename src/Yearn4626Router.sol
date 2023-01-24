@@ -17,63 +17,109 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
     /// @inheritdoc IYearn4626Router
     function depositToVault(
         IYearn4626 vault,
-        address to,
         uint256 amount,
+        address to,
         uint256 minSharesOut
-    ) external payable override returns (uint256 sharesOut) {
+    ) public payable override returns (uint256 sharesOut) {
         pullToken(ERC20(vault.asset()), amount, address(this));
-        return deposit(vault, to, amount, minSharesOut);
+        return deposit(vault, amount, to, minSharesOut);
+    }
+
+    // @inheritdoc IYearn4626Router
+    function depositToVault(
+        IYearn4626 vault,
+        uint256 amount,
+        address to
+    ) external payable returns (uint256 sharesOut) {
+        return depositToVault(vault, amount, to, 0);
+    }
+
+    function depositToVault(
+        IYearn4626 vault,
+        uint256 amount
+    ) external payable returns (uint256 sharesOut) {
+        return depositToVault(vault, amount, msg.sender, 0);
+    }
+
+    function depositToVault(
+        IYearn4626 vault
+    ) external payable returns (uint256 sharesOut) {
+        return depositToVault(vault, ERC20(vault.asset()).balanceOf(msg.sender), msg.sender, 0);
     }
 
     /// @inheritdoc IYearn4626Router
     function withdrawToDeposit(
         IYearn4626 fromVault,
         IYearn4626 toVault,
-        address to,
         uint256 amount,
+        address to,
         uint256 maxSharesIn,
         uint256 minSharesOut
     ) external payable override returns (uint256 sharesOut) {
-        withdraw(fromVault, address(this), amount, maxSharesIn);
-        return deposit(toVault, to, amount, minSharesOut);
+        withdraw(fromVault, amount, address(this), maxSharesIn);
+        return deposit(toVault, amount, to, minSharesOut);
     }
 
     /// @inheritdoc IYearn4626Router
     function redeemToDeposit(
         IYearn4626 fromVault,
         IYearn4626 toVault,
-        address to,
         uint256 shares,
-        uint256 minSharesOut
-    ) external payable override returns (uint256 sharesOut) {
-        // amount out passes through so only one slippage check is needed
-        uint256 amount = redeem(fromVault, address(this), shares, 0);
-        return deposit(toVault, to, amount, minSharesOut);
-    }
-
-    /// @inheritdoc IYearn4626Router
-    function depositMax(
-        IYearn4626 vault,
         address to,
         uint256 minSharesOut
     ) public payable override returns (uint256 sharesOut) {
-        ERC20 asset = ERC20(vault.asset());
-        uint256 assetBalance = asset.balanceOf(msg.sender);
-        uint256 maxDeposit = vault.maxDeposit(to);
-        uint256 amount = maxDeposit < assetBalance ? maxDeposit : assetBalance;
-        pullToken(asset, amount, address(this));
-        return deposit(vault, to, amount, minSharesOut);
+        // amount out passes through so only one slippage check is needed
+        uint256 amount = redeem(fromVault, shares, address(this), 0);
+        return deposit(toVault, amount, to, minSharesOut);
     }
 
-    /// @inheritdoc IYearn4626Router
-    function redeemMax(
-        IYearn4626 vault,
+    function migrate(
+        IYearn4626 fromVault,
+        IYearn4626 toVault,
         address to,
-        uint256 minAmountOut
-    ) public payable override returns (uint256 amountOut) {
-        uint256 shareBalance = vault.balanceOf(msg.sender);
-        uint256 maxRedeem = vault.maxRedeem(msg.sender);
-        uint256 amountShares = maxRedeem < shareBalance ? maxRedeem : shareBalance;
-        return redeem(vault, to, amountShares, minAmountOut);
+        uint256 minSharesOut
+    ) external payable returns(uint256 sharesOut) {
+        uint256 shares = fromVault.balanceOf(msg.sender);
+        return redeemToDeposit(fromVault, toVault, shares, to, minSharesOut);
+    }
+
+    function migrate(
+        IYearn4626 fromVault,
+        IYearn4626 toVault,
+        address to
+    ) external payable returns(uint256 sharesOut) {
+        uint256 shares = fromVault.balanceOf(msg.sender);
+        return redeemToDeposit(fromVault, toVault, shares, to, 0);
+    }
+
+    function migrate(
+        IYearn4626 fromVault,
+        IYearn4626 toVault
+    ) external payable returns(uint256 sharesOut) {
+        uint256 shares = fromVault.balanceOf(msg.sender);
+        return redeemToDeposit(fromVault, toVault, shares, msg.sender, 0);
+    }
+
+    // @inheritdoc IYearn4626Router
+    function redeem(
+        IYearn4626 vault,
+        uint256 shares,
+        address to
+    ) public payable returns (uint256 amountOut) {
+        return redeem(vault, shares, to, 0);
+    }
+    
+    function redeem(
+        IYearn4626 vault,
+        uint256 shares
+    ) public payable returns (uint256 amountOut) {
+        return redeem(vault, shares, msg.sender, 0);
+    }
+
+    function redeem(
+        IYearn4626 vault
+    ) public payable returns (uint256 amountOut) {
+        uint256 shares = vault.balanceOf(msg.sender);
+        return redeem(vault, shares, msg.sender, 0);
     }
 }

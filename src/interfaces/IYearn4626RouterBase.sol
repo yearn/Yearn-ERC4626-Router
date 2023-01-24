@@ -36,16 +36,16 @@ interface IYearn4626RouterBase {
     /** 
      @notice mint `shares` from an ERC4626 vault.
      @param vault The ERC4626 vault to mint shares from.
-     @param to The destination of ownership shares.
      @param shares The amount of shares to mint from `vault`.
+     @param to The destination of ownership shares.
      @param maxAmountIn The max amount of assets used to mint.
      @return amountIn the amount of assets used to mint by `to`.
      @dev throws MaxAmountError   
     */
     function mint(
         IYearn4626 vault,
-        address to,
         uint256 shares,
+        address to,
         uint256 maxAmountIn
     ) external payable returns (uint256 amountIn);
 
@@ -54,16 +54,16 @@ interface IYearn4626RouterBase {
     /** 
      @notice deposit `amount` to an ERC4626 vault.
      @param vault The ERC4626 vault to deposit assets to.
-     @param to The destination of ownership shares.
      @param amount The amount of assets to deposit to `vault`.
+     @param to The destination of ownership shares.
      @param minSharesOut The min amount of `vault` shares received by `to`.
      @return sharesOut the amount of shares received by `to`.
      @dev throws MinSharesError   
     */
     function deposit(
         IYearn4626 vault,
-        address to,
         uint256 amount,
+        address to,
         uint256 minSharesOut
     ) external payable returns (uint256 sharesOut);
 
@@ -72,16 +72,16 @@ interface IYearn4626RouterBase {
     /** 
      @notice withdraw `amount` from an ERC4626 vault.
      @param vault The ERC4626 vault to withdraw assets from.
-     @param to The destination of assets.
      @param amount The amount of assets to withdraw from vault.
+     @param to The destination of assets.
      @param minSharesOut The min amount of shares received by `to`.
      @return sharesOut the amount of shares received by `to`.
      @dev throws MaxSharesError   
     */
     function withdraw(
         IYearn4626 vault,
-        address to,
         uint256 amount,
+        address to,
         uint256 minSharesOut
     ) external payable returns (uint256 sharesOut);
 
@@ -90,16 +90,16 @@ interface IYearn4626RouterBase {
     /** 
      @notice redeem `shares` shares from an ERC4626 vault.
      @param vault The ERC4626 vault to redeem shares from.
-     @param to The destination of assets.
      @param shares The amount of shares to redeem from vault.
+     @param to The destination of assets.
      @param minAmountOut The min amount of assets received by `to`.
      @return amountOut the amount of assets received by `to`.
      @dev throws MinAmountError   
     */
     function redeem(
         IYearn4626 vault,
-        address to,
         uint256 shares,
+        address to,
         uint256 minAmountOut
     ) external payable returns (uint256 amountOut);
 }

@@ -17,8 +17,8 @@ abstract contract Yearn4626RouterBase is IYearn4626RouterBase, WithdrawalStack, 
     /// @inheritdoc IYearn4626RouterBase
     function mint(
         IYearn4626 vault,
-        address to,
         uint256 shares,
+        address to,
         uint256 maxAmountIn
     ) public payable virtual override returns (uint256 amountIn) {
         if ((amountIn = vault.mint(shares, to)) > maxAmountIn) {
@@ -29,8 +29,8 @@ abstract contract Yearn4626RouterBase is IYearn4626RouterBase, WithdrawalStack, 
     /// @inheritdoc IYearn4626RouterBase
     function deposit(
         IYearn4626 vault,
-        address to,
         uint256 amount,
+        address to,
         uint256 minSharesOut
     ) public payable virtual override returns (uint256 sharesOut) {
         if ((sharesOut = vault.deposit(amount, to)) < minSharesOut) {
@@ -41,8 +41,8 @@ abstract contract Yearn4626RouterBase is IYearn4626RouterBase, WithdrawalStack, 
     /// @inheritdoc IYearn4626RouterBase
     function withdraw(
         IYearn4626 vault,
-        address to,
         uint256 amount,
+        address to,
         uint256 maxSharesOut
     ) public payable virtual override returns (uint256 sharesOut) {
         if ((sharesOut = vault.withdraw(amount, to, msg.sender, withdrawalStack[address(vault)])) > maxSharesOut) {
@@ -53,8 +53,8 @@ abstract contract Yearn4626RouterBase is IYearn4626RouterBase, WithdrawalStack, 
     /// @inheritdoc IYearn4626RouterBase
     function redeem(
         IYearn4626 vault,
-        address to,
         uint256 shares,
+        address to,
         uint256 minAmountOut
     ) public payable virtual override returns (uint256 amountOut) {
         if ((amountOut = vault.redeem(shares, to, msg.sender, withdrawalStack[address(vault)])) < minAmountOut) {

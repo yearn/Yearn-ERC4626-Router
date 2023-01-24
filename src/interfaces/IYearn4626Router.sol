@@ -21,21 +21,7 @@ interface IYearn4626Router {
     */
     function depositToVault(
         IYearn4626 vault,
-        address to,
         uint256 amount,
-        uint256 minSharesOut
-    ) external payable returns (uint256 sharesOut);
-
-    /** 
-     @notice deposit max assets to an ERC4626 vault.
-     @param vault The ERC4626 vault to deposit assets to.
-     @param to The destination of ownership shares.
-     @param minSharesOut The min amount of `vault` shares received by `to`.
-     @return sharesOut the amount of shares received by `to`.
-     @dev throws MinSharesError   
-    */
-    function depositMax(
-        IYearn4626 vault,
         address to,
         uint256 minSharesOut
     ) external payable returns (uint256 sharesOut);
@@ -46,8 +32,8 @@ interface IYearn4626Router {
      @notice withdraw `amount` to an ERC4626 vault.
      @param fromVault The ERC4626 vault to withdraw assets from.
      @param toVault The ERC4626 vault to deposit assets to.
-     @param to The destination of ownership shares.
      @param amount The amount of assets to withdraw from fromVault.
+     @param to The destination of ownership shares.
      @param maxSharesIn The max amount of fromVault shares withdrawn by caller.
      @param minSharesOut The min amount of toVault shares received by `to`.
      @return sharesOut the amount of shares received by `to`.
@@ -56,8 +42,8 @@ interface IYearn4626Router {
     function withdrawToDeposit(
         IYearn4626 fromVault,
         IYearn4626 toVault,
-        address to,
         uint256 amount,
+        address to,
         uint256 maxSharesIn,
         uint256 minSharesOut
     ) external payable returns (uint256 sharesOut);
@@ -68,8 +54,8 @@ interface IYearn4626Router {
      @notice redeem `shares` to an ERC4626 vault.
      @param fromVault The ERC4626 vault to redeem shares from.
      @param toVault The ERC4626 vault to deposit assets to.
-     @param to The destination of ownership shares.
      @param shares The amount of shares to redeem from fromVault.
+     @param to The destination of ownership shares.
      @param minSharesOut The min amount of toVault shares received by `to`.
      @return sharesOut the amount of shares received by `to`.
      @dev throws MinAmountError, MinSharesError   
@@ -77,8 +63,8 @@ interface IYearn4626Router {
     function redeemToDeposit(
         IYearn4626 fromVault,
         IYearn4626 toVault,
-        address to,
         uint256 shares,
+        address to,
         uint256 minSharesOut
     ) external payable returns (uint256 sharesOut);
 
@@ -89,10 +75,12 @@ interface IYearn4626Router {
      @param minAmountOut The min amount of assets received by `to`.
      @return amountOut the amount of assets received by `to`.
      @dev throws MinAmountError   
-    */
-    function redeemMax(
+    *
+    function redeem(
         IYearn4626 vault,
+        uint256 shares,
         address to,
         uint256 minAmountOut
     ) external payable returns (uint256 amountOut);
+    */
 }

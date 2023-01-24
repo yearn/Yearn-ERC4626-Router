@@ -32,4 +32,49 @@ interface IWithdrawalStack {
 
     /// @notice Throw when adding to a withdrawal stack that is full or setting a stack.length > max
     error StackSize();
+
+    /************************** Main Functions **************************/
+
+    /** 
+     @notice Adds a new "strategy" to a specific "vault" withdrawal stack
+     @param vault, Address of the vault to add the strategy to
+     @param strategy, Address of the strategy to add to the vaults stack
+     @dev Reverts if the withdrawal stack is already MAX_WITHDRAWAL_STACK_SIZE
+    */
+    function addStrategy(address vault, address strategy) external;
+
+    /**
+     @notice Removes a "strategy" from a specific "vault" withdrawal stack
+     @param vault, Address of the vault to remove the strategy from
+     @param strategy, Address of the strategy to remove from the vaults stack
+     @dev Permisionless to remove strategies that have been revoked by the vault already
+    */
+    function removeStrategy(address vault, address strategy) external;
+
+    /**
+     @notice Replace a specific strategy with a new strategy
+     @param vault, Address of the vault whose stack we are updating
+     @param idx, The index where the old strategy is in the stack
+     @param newStrategy, The address of the new strategy to replace the old one
+    */
+    function replaceWithdrawalStackIndex(
+        address vault,
+        uint256 idx,
+        address newStrategy
+    ) external;
+
+    /**
+     @notice Set the full withdrawal stack for a 'vault' at once
+     @param vault, The address of the vaults whose stack we are setting
+     @param newStack, Dynamic array of address' that will be set as the new stack
+     @dev Will revert if the newStack.length > MAX_WITHDRAWAL_STACK_SIZE
+     */
+    function setWithdrawalStack(address vault, address[] memory newStack) external;
+
+    /**
+     @notice View function to return the full withdrawal stack for any 'vault
+     @param vault, Address of the vault
+     @return withdrawalStack array containing all the strategies currently in the withdrawal stack
+    */
+    function getWithdrawalStack(address vault) external view returns (address[] memory);
 }

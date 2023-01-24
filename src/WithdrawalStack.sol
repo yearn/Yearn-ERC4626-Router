@@ -10,8 +10,10 @@ abstract contract WithdrawalStack is IWithdrawalStack {
     address public governance;
     address public pendingGovernance;
 
-    uint256 constant MAX_WITHDRAWAL_STACK_SIZE = 10;
+    // Max size of array the Vaults will accept as a paramater
+    uint256 internal constant MAX_WITHDRAWAL_STACK_SIZE = 10;
 
+    // Mapping of a vault address to the array repersenting its withdrawal stack
     mapping(address => address[]) public withdrawalStack;
 
     modifier onlyGovernance() {
@@ -27,6 +29,7 @@ abstract contract WithdrawalStack is IWithdrawalStack {
         governance == msg.sender;
     }
 
+    /// @inheritdoc IWithdrawalStack
     function addStrategy(address vault, address strategy) external onlyGovernance {
         // we assume the vault has checked what needs to be
         if(IYearn4626(vault).strategies(strategy).activation == 0) revert NotActive();
@@ -40,6 +43,7 @@ abstract contract WithdrawalStack is IWithdrawalStack {
         emit StrategyAdded(vault, strategy);
     }
     
+    /// @inheritdoc IWithdrawalStack
     function removeStrategy(address vault, address strategy) external {
         // allow for permisionless removal if the strategy has been revoked from the vault
         if(IYearn4626(vault).strategies(strategy).activation != 0) checkGovernance();
@@ -66,6 +70,7 @@ abstract contract WithdrawalStack is IWithdrawalStack {
         }
     }
     
+    /// @inheritdoc IWithdrawalStack
     function replaceWithdrawalStackIndex(address vault, uint256 idx, address newStrategy) external onlyGovernance {
         if(IYearn4626(vault).strategies(newStrategy).activation == 0) revert NotActive();
 
@@ -77,6 +82,7 @@ abstract contract WithdrawalStack is IWithdrawalStack {
         emit ReplacedWithdrawalStackIndex(vault, oldStrategy, newStrategy);
     }
 
+    /// @inheritdoc IWithdrawalStack
     function setWithdrawalStack(address vault, address[] memory newStack) external onlyGovernance {
         if(newStack.length > MAX_WITHDRAWAL_STACK_SIZE) revert StackSize();
 
@@ -91,13 +97,14 @@ abstract contract WithdrawalStack is IWithdrawalStack {
         emit NewWithdrawStack(vault, newStack);
     }
 
+    /// @inheritdoc IWithdrawalStack
     function getWithdrawalStack(address vault) public view returns(address[] memory) {
         return withdrawalStack[vault];
     }
 
     function setGovernance(address newGovernance) external onlyGovernance {
-        emit NewPendingGovernance(newGovernance);
         pendingGovernance = newGovernance;
+        emit NewPendingGovernance(newGovernance);
     }
 
     function acceptGovernance() external {

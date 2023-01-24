@@ -30,12 +30,12 @@ contract WithdrawalStackTest is DSTestPlus {
 
     receive() external payable {}
 
-    function createVault() public returns(IYearn4626 newVault) {
+    function createVault() public returns (IYearn4626 newVault) {
         MockERC20 asset = new MockERC20("Mock Token", "TKN", 18);
         newVault = IYearn4626(address(new MockYearn4626(asset)));
     }
 
-    function createStrategy(IYearn4626 _vault) public returns(address strategy) {
+    function createStrategy(IYearn4626 _vault) public returns (address strategy) {
         strategy = address(new MockERC4626(ERC20(_vault.asset()), "Mock Strategy", "mSTGY"));
     }
 
@@ -49,7 +49,7 @@ contract WithdrawalStackTest is DSTestPlus {
         vault_.removeStrategy(strategy);
     }
 
-    function createStrategyAndAddToVault(IYearn4626 _vault) public returns(address strategy) {
+    function createStrategyAndAddToVault(IYearn4626 _vault) public returns (address strategy) {
         strategy = createStrategy(_vault);
         addStrategyToVault(_vault, strategy);
     }
@@ -67,7 +67,7 @@ contract WithdrawalStackTest is DSTestPlus {
         addStrategyToRouter(_vault, strategy);
     }
 
-    function createStrategyAndAddToVaultAndRouter(IYearn4626 _vault) public returns(address strategy) {
+    function createStrategyAndAddToVaultAndRouter(IYearn4626 _vault) public returns (address strategy) {
         strategy = createStrategy(_vault);
         addStrategyToVaultAndRouter(_vault, strategy);
     }
@@ -140,7 +140,7 @@ contract WithdrawalStackTest is DSTestPlus {
 
         assertEq(router.getWithdrawalStack(address(vault)).length, 0);
     }
-    
+
     function testAddStrategyNotAddedTo_vaultFails() public {
         address strategy = createStrategy(vault);
 
@@ -159,7 +159,7 @@ contract WithdrawalStackTest is DSTestPlus {
     function testAddStrategyStackFullFails() public {
         address strategy;
 
-        for(uint256 i; i < 10; ++i) {
+        for (uint256 i; i < 10; ++i) {
             strategy = createStrategy(vault);
             addStrategyToVault(vault, strategy);
             router.addStrategy(address(vault), strategy);
@@ -260,9 +260,7 @@ contract WithdrawalStackTest is DSTestPlus {
         secondStack[1] = secondStrategy;
         secondStack[2] = thirdStrategy;
         secondStack[3] = fourthStrategy;
-        router.setWithdrawalStack(
-            address(vault), secondStack
-        );
+        router.setWithdrawalStack(address(vault), secondStack);
 
         assertEq(router.getWithdrawalStack(address(vault)).length, 4);
         assertEq(router.withdrawalStack(address(vault), 0), strategy);
@@ -304,7 +302,7 @@ contract WithdrawalStackTest is DSTestPlus {
 
         address[] memory badStack = new address[](11);
 
-        for(uint256 i; i < 11; ++i) {
+        for (uint256 i; i < 11; ++i) {
             badStack[i] = createStrategyAndAddToVault(vault);
         }
 
@@ -328,7 +326,7 @@ contract WithdrawalStackTest is DSTestPlus {
         assertEq(router.withdrawalStack(address(vault), 0), secondStrategy);
 
         // fill the whole stack with new strategies
-        for(uint256 i; i < 9; ++i) {
+        for (uint256 i; i < 9; ++i) {
             createStrategyAndAddToVaultAndRouter(vault);
         }
 
@@ -357,7 +355,7 @@ contract WithdrawalStackTest is DSTestPlus {
         router.replaceWithdrawalStackIndex(address(vault), 0, secondStrategy);
 
         // fill the whole stack with new strategies
-        for(uint256 i; i < 9; ++i) {
+        for (uint256 i; i < 9; ++i) {
             createStrategyAndAddToVaultAndRouter(vault);
         }
 
