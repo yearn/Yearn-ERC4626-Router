@@ -25,7 +25,6 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
         return deposit(vault, amount, to, minSharesOut);
     }
 
-    // @inheritdoc IYearn4626Router
     function depositToVault(
         IYearn4626 vault,
         uint256 amount,
@@ -35,7 +34,7 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
     }
 
     function depositToVault(
-        IYearn4626 vault,
+        IYearn4626 vault, 
         uint256 amount
     ) external payable returns (uint256 sharesOut) {
         return depositToVault(vault, amount, msg.sender, 0);
@@ -48,20 +47,7 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
     }
 
     /// @inheritdoc IYearn4626Router
-    function withdrawToDeposit(
-        IYearn4626 fromVault,
-        IYearn4626 toVault,
-        uint256 amount,
-        address to,
-        uint256 maxSharesIn,
-        uint256 minSharesOut
-    ) external payable override returns (uint256 sharesOut) {
-        withdraw(fromVault, amount, address(this), maxSharesIn);
-        return deposit(toVault, amount, to, minSharesOut);
-    }
-
-    /// @inheritdoc IYearn4626Router
-    function redeemToDeposit(
+    function migrate(
         IYearn4626 fromVault,
         IYearn4626 toVault,
         uint256 shares,
@@ -76,31 +62,28 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
     function migrate(
         IYearn4626 fromVault,
         IYearn4626 toVault,
-        address to,
-        uint256 minSharesOut
-    ) external payable returns(uint256 sharesOut) {
-        uint256 shares = fromVault.balanceOf(msg.sender);
-        return redeemToDeposit(fromVault, toVault, shares, to, minSharesOut);
+        uint256 shares,
+        address to
+    ) external payable returns (uint256 sharesOut) {
+        return migrate(fromVault, toVault, shares, to, 0);
     }
 
     function migrate(
         IYearn4626 fromVault,
         IYearn4626 toVault,
-        address to
-    ) external payable returns(uint256 sharesOut) {
-        uint256 shares = fromVault.balanceOf(msg.sender);
-        return redeemToDeposit(fromVault, toVault, shares, to, 0);
+        uint256 shares
+    ) external payable returns (uint256 sharesOut) {
+        return migrate(fromVault, toVault, shares, msg.sender, 0);
     }
 
     function migrate(
-        IYearn4626 fromVault,
+        IYearn4626 fromVault, 
         IYearn4626 toVault
-    ) external payable returns(uint256 sharesOut) {
+    ) external payable returns (uint256 sharesOut) {
         uint256 shares = fromVault.balanceOf(msg.sender);
-        return redeemToDeposit(fromVault, toVault, shares, msg.sender, 0);
+        return migrate(fromVault, toVault, shares, msg.sender, 0);
     }
 
-    // @inheritdoc IYearn4626Router
     function redeem(
         IYearn4626 vault,
         uint256 shares,
@@ -108,9 +91,9 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
     ) public payable returns (uint256 amountOut) {
         return redeem(vault, shares, to, 0);
     }
-    
+
     function redeem(
-        IYearn4626 vault,
+        IYearn4626 vault, 
         uint256 shares
     ) public payable returns (uint256 amountOut) {
         return redeem(vault, shares, msg.sender, 0);
@@ -121,5 +104,18 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
     ) public payable returns (uint256 amountOut) {
         uint256 shares = vault.balanceOf(msg.sender);
         return redeem(vault, shares, msg.sender, 0);
+    }
+
+    /// @inheritdoc IYearn4626Router
+    function withdrawToDeposit(
+        IYearn4626 fromVault,
+        IYearn4626 toVault,
+        uint256 amount,
+        address to,
+        uint256 maxSharesIn,
+        uint256 minSharesOut
+    ) external payable override returns (uint256 sharesOut) {
+        withdraw(fromVault, amount, address(this), maxSharesIn);
+        return deposit(toVault, amount, to, minSharesOut);
     }
 }

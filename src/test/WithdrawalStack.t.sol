@@ -193,15 +193,15 @@ contract WithdrawalStackTest is DSTestPlus {
         router.removeStrategy(address(vault), strategy);
 
         assertEq(router.getWithdrawalStack(address(vault)).length, 2);
-        assertEq(router.withdrawalStack(address(vault), 0), thirdStrategy);
-        assertEq(router.withdrawalStack(address(vault), 1), secondStrategy);
-
-        router.removeStrategy(address(vault), secondStrategy);
-
-        assertEq(router.getWithdrawalStack(address(vault)).length, 1);
-        assertEq(router.withdrawalStack(address(vault), 0), thirdStrategy);
+        assertEq(router.withdrawalStack(address(vault), 0), secondStrategy);
+        assertEq(router.withdrawalStack(address(vault), 1), thirdStrategy);
 
         router.removeStrategy(address(vault), thirdStrategy);
+
+        assertEq(router.getWithdrawalStack(address(vault)).length, 1);
+        assertEq(router.withdrawalStack(address(vault), 0), secondStrategy);
+
+        router.removeStrategy(address(vault), secondStrategy);
 
         assertEq(router.getWithdrawalStack(address(vault)).length, 0);
     }

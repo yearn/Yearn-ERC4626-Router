@@ -249,7 +249,7 @@ contract ERC4626Test is DSTestPlus {
 
         vault.approve(address(router), type(uint256).max);
 
-        router.redeemToDeposit(vault, toVault, amount, address(this), amount);
+        router.migrate(vault, toVault, amount, address(this), amount);
 
         require(toVault.balanceOf(address(this)) == amount);
         require(vault.balanceOf(address(this)) == 0);
@@ -273,7 +273,7 @@ contract ERC4626Test is DSTestPlus {
         vault.approve(address(router), type(uint256).max);
 
         hevm.expectRevert(abi.encodeWithSignature("MinSharesError()"));
-        router.redeemToDeposit(vault, toVault, amount, address(this), amount + 1);
+        router.migrate(vault, toVault, amount, address(this), amount + 1);
     }
 
     function testWithdraw(uint128 amount) public {

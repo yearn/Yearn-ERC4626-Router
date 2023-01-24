@@ -5,7 +5,6 @@ import {ERC20} from "solmate/tokens/ERC20.sol";
 import {MockERC4626} from "solmate/test/utils/mocks/MockERC4626.sol";
 
 contract MockYearn4626 is MockERC4626 {
-
     struct StrategyParams {
         uint256 activation;
         uint256 last_report;
@@ -13,7 +12,7 @@ contract MockYearn4626 is MockERC4626 {
         uint256 max_debt;
     }
 
-    mapping (address => StrategyParams) public strategies;
+    mapping(address => StrategyParams) public strategies;
 
     constructor(ERC20 underlying) MockERC4626(underlying, "Mock Yearn4626", "yMTKN") {}
 
@@ -24,7 +23,7 @@ contract MockYearn4626 is MockERC4626 {
         address owner,
         address[] memory /*_strategies*/
     ) public returns (uint256 shares) {
-      return withdraw(assets, receiver, owner);
+        return withdraw(assets, receiver, owner);
     }
 
     /// @notice Yearn Specific "redeem" with withdrawal stack included
@@ -33,25 +32,15 @@ contract MockYearn4626 is MockERC4626 {
         address receiver,
         address owner,
         address[] memory /*_strategies*/
-    ) public returns (uint256 assets){
-      return redeem(shares, receiver, owner);
+    ) public returns (uint256 assets) {
+        return redeem(shares, receiver, owner);
     }
 
     function addStrategy(address strategy) external {
-        strategies[strategy] = StrategyParams(
-            block.timestamp,
-            block.timestamp,
-            0,
-            0
-        );
+        strategies[strategy] = StrategyParams(block.timestamp, block.timestamp, 0, 0);
     }
 
     function removeStrategy(address strategy) external {
-        strategies[strategy] = StrategyParams(
-            0,
-            0,
-            0,
-            0
-        );
+        strategies[strategy] = StrategyParams(0, 0, 0, 0);
     }
 }

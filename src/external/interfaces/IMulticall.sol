@@ -1,5 +1,5 @@
 // forked from https://github.com/Uniswap/v3-periphery/blob/main/contracts/interfaces/IMulticall.sol
-   
+
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity >=0.7.5;
 

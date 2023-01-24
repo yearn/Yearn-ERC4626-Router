@@ -17,7 +17,7 @@ interface IYearn4626Router {
      @param amount The amount of assets to deposit to `vault`.
      @param minSharesOut The min amount of `vault` shares received by `to`.
      @return sharesOut the amount of shares received by `to`.
-     @dev throws MinSharesError   
+     @dev throws MinSharesError. Can call with just 'vault' to deposit max.
     */
     function depositToVault(
         IYearn4626 vault,
@@ -48,39 +48,23 @@ interface IYearn4626Router {
         uint256 minSharesOut
     ) external payable returns (uint256 sharesOut);
 
-    /************************** Redeem **************************/
+    /************************** Migrate **************************/
 
     /** 
-     @notice redeem `shares` to an ERC4626 vault.
+     @notice will redeem `shares` from one vault and deposit amountOut to a different ERC4626 vault.
      @param fromVault The ERC4626 vault to redeem shares from.
      @param toVault The ERC4626 vault to deposit assets to.
      @param shares The amount of shares to redeem from fromVault.
      @param to The destination of ownership shares.
      @param minSharesOut The min amount of toVault shares received by `to`.
      @return sharesOut the amount of shares received by `to`.
-     @dev throws MinAmountError, MinSharesError   
+     @dev throws MinAmountError, MinSharesError. Can call with only 'fromVault' and 'toVault' to migrate max.
     */
-    function redeemToDeposit(
+    function migrate(
         IYearn4626 fromVault,
         IYearn4626 toVault,
         uint256 shares,
         address to,
         uint256 minSharesOut
     ) external payable returns (uint256 sharesOut);
-
-    /** 
-     @notice redeem max shares to an ERC4626 vault.
-     @param vault The ERC4626 vault to redeem shares from.
-     @param to The destination of assets.
-     @param minAmountOut The min amount of assets received by `to`.
-     @return amountOut the amount of assets received by `to`.
-     @dev throws MinAmountError   
-    *
-    function redeem(
-        IYearn4626 vault,
-        uint256 shares,
-        address to,
-        uint256 minAmountOut
-    ) external payable returns (uint256 amountOut);
-    */
 }

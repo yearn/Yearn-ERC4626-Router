@@ -11,7 +11,13 @@ import {Multicall} from "./external/Multicall.sol";
 import {PeripheryPayments, IWETH9} from "./external/PeripheryPayments.sol";
 
 /// @title ERC4626 Router Base Contract
-abstract contract Yearn4626RouterBase is IYearn4626RouterBase, WithdrawalStack, SelfPermit, Multicall, PeripheryPayments {
+abstract contract Yearn4626RouterBase is
+    IYearn4626RouterBase,
+    WithdrawalStack,
+    SelfPermit,
+    Multicall,
+    PeripheryPayments
+{
     using SafeTransferLib for ERC20;
 
     /// @inheritdoc IYearn4626RouterBase
