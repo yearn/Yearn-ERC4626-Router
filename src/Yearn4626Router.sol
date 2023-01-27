@@ -4,7 +4,7 @@ pragma solidity 0.8.10;
 import "./Yearn4626RouterBase.sol";
 
 import {ENSReverseRecord} from "./utils/ENSReverseRecord.sol";
-import {IYearn4626Router} from "./interfaces/IYearn4626Router.sol";
+import {IYearn4626Router, IYearnV2} from "./interfaces/IYearn4626Router.sol";
 
 /// @title Yearn4626Router contract
 contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRecord {
@@ -46,6 +46,28 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
         return depositToVault(vault, ERC20(vault.asset()).balanceOf(msg.sender), msg.sender, 0);
     }
 
+    function redeem(
+        IYearn4626 vault,
+        uint256 shares,
+        address to
+    ) public payable returns (uint256 amountOut) {
+        return redeem(vault, shares, to, 0);
+    }
+
+    function redeem(
+        IYearn4626 vault, 
+        uint256 shares
+    ) public payable returns (uint256 amountOut) {
+        return redeem(vault, shares, msg.sender, 0);
+    }
+
+    function redeem(
+        IYearn4626 vault
+    ) public payable returns (uint256 amountOut) {
+        uint256 shares = vault.balanceOf(msg.sender);
+        return redeem(vault, shares, msg.sender, 0);
+    }
+
     /// @inheritdoc IYearn4626Router
     function migrate(
         IYearn4626 fromVault,
@@ -84,26 +106,17 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
         return migrate(fromVault, toVault, shares, msg.sender, 0);
     }
 
-    function redeem(
-        IYearn4626 vault,
+    /// @inheritdoc IYearn4626Router
+    function migrateFromV2(
+        IYearnV2 fromVault,
+        IYearn4626 toVault,
         uint256 shares,
-        address to
-    ) public payable returns (uint256 amountOut) {
-        return redeem(vault, shares, to, 0);
-    }
-
-    function redeem(
-        IYearn4626 vault, 
-        uint256 shares
-    ) public payable returns (uint256 amountOut) {
-        return redeem(vault, shares, msg.sender, 0);
-    }
-
-    function redeem(
-        IYearn4626 vault
-    ) public payable returns (uint256 amountOut) {
-        uint256 shares = vault.balanceOf(msg.sender);
-        return redeem(vault, shares, msg.sender, 0);
+        address to,
+        uint256 minSharesOut
+    ) public payable override returns (uint256 sharesOut) {
+        // amount out passes through so only one slippage check is needed
+        uint256 redeemed = fromVault.withdraw(shares, address(this), 1);
+        return deposit(toVault, redeemed, to, minSharesOut);
     }
 
     /// @inheritdoc IYearn4626Router

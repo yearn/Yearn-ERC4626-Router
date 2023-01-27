@@ -2,6 +2,7 @@
 pragma solidity 0.8.10;
 
 import "./IYearn4626.sol";
+import "./IYearnV2.sol";
 
 /** 
  @title ERC4626Router Interface
@@ -62,6 +63,17 @@ interface IYearn4626Router {
     */
     function migrate(
         IYearn4626 fromVault,
+        IYearn4626 toVault,
+        uint256 shares,
+        address to,
+        uint256 minSharesOut
+    ) external payable returns (uint256 sharesOut);
+
+    /**
+     @notice migrate from Yearn V2 vault to a V3 vault
+    */
+    function migrateFromV2(
+        IYearnV2 fromVault,
         IYearn4626 toVault,
         uint256 shares,
         address to,
