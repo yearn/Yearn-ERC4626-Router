@@ -3,7 +3,7 @@ pragma solidity 0.8.10;
 import {ERC20, MockERC20} from "solmate/test/utils/mocks/MockERC20.sol";
 import {MockERC4626} from "solmate/test/utils/mocks/MockERC4626.sol";
 
-import {MockYearn4626} from "./mocks/MockYearn4626.sol";
+import {MockYearnV3} from "./mocks/MockYearnV3.sol";
 import {WETH} from "solmate/tokens/WETH.sol";
 
 import {IYearn4626Router, Yearn4626Router} from "../Yearn4626Router.sol";
@@ -32,7 +32,7 @@ contract WithdrawalStackTest is DSTestPlus {
 
     function createVault() public returns (IYearn4626 newVault) {
         MockERC20 asset = new MockERC20("Mock Token", "TKN", 18);
-        newVault = IYearn4626(address(new MockYearn4626(asset)));
+        newVault = IYearn4626(address(new MockYearnV3(asset)));
     }
 
     function createStrategy(IYearn4626 _vault) public returns (address strategy) {
@@ -40,12 +40,12 @@ contract WithdrawalStackTest is DSTestPlus {
     }
 
     function addStrategyToVault(IYearn4626 _vault, address strategy) public {
-        MockYearn4626 vault_ = MockYearn4626(address(_vault));
+        MockYearnV3 vault_ = MockYearnV3(address(_vault));
         vault_.addStrategy(strategy);
     }
 
     function removeStrategyFromVault(IYearn4626 _vault, address strategy) public {
-        MockYearn4626 vault_ = MockYearn4626(address(_vault));
+        MockYearnV3 vault_ = MockYearnV3(address(_vault));
         vault_.removeStrategy(strategy);
     }
 
@@ -75,12 +75,12 @@ contract WithdrawalStackTest is DSTestPlus {
     function setUp() public {
         underlying = new MockERC20("Mock Token", "TKN", 18);
 
-        vault = IYearn4626(address(new MockYearn4626(underlying)));
-        toVault = IYearn4626(address(new MockYearn4626(underlying)));
+        vault = IYearn4626(address(new MockYearnV3(underlying)));
+        toVault = IYearn4626(address(new MockYearnV3(underlying)));
 
         weth = IWETH9(address(new WETH()));
 
-        wethVault = IYearn4626(address(new MockYearn4626(weth)));
+        wethVault = IYearn4626(address(new MockYearnV3(weth)));
 
         router = new Yearn4626Router("", weth); // empty reverse ens
 

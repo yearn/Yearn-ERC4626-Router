@@ -25,6 +25,8 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
         return deposit(vault, amount, to, minSharesOut);
     }
 
+    //-------- DEPOSIT FUNCTIONS WITH DEFAULT VALUES --------\\
+
     function depositToVault(
         IYearn4626 vault,
         uint256 amount,
@@ -46,24 +48,26 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
         return depositToVault(vault, ERC20(vault.asset()).balanceOf(msg.sender), msg.sender, 0);
     }
 
+    //-------- REDEEM FUNCTIONS WITH DEFAULT VALUES --------\\
+
     function redeem(
         IYearn4626 vault,
         uint256 shares,
         address to
-    ) public payable returns (uint256 amountOut) {
+    ) external payable returns (uint256 amountOut) {
         return redeem(vault, shares, to, 0);
     }
 
     function redeem(
         IYearn4626 vault, 
         uint256 shares
-    ) public payable returns (uint256 amountOut) {
+    ) external payable returns (uint256 amountOut) {
         return redeem(vault, shares, msg.sender, 0);
     }
 
     function redeem(
         IYearn4626 vault
-    ) public payable returns (uint256 amountOut) {
+    ) external payable returns (uint256 amountOut) {
         uint256 shares = vault.balanceOf(msg.sender);
         return redeem(vault, shares, msg.sender, 0);
     }
@@ -80,6 +84,8 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
         uint256 amount = redeem(fromVault, shares, address(this), 0);
         return deposit(toVault, amount, to, minSharesOut);
     }
+
+    //-------- MIGRATE FUNCTIONS WITH DEFAULT VALUES --------\\
 
     function migrate(
         IYearn4626 fromVault,
@@ -107,7 +113,7 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
     }
 
     /// @inheritdoc IYearn4626Router
-    function migrateFromV2(
+    function migrateV2(
         IYearnV2 fromVault,
         IYearn4626 toVault,
         uint256 shares,
@@ -115,8 +121,35 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase, ENSReverseRec
         uint256 minSharesOut
     ) public payable override returns (uint256 sharesOut) {
         // amount out passes through so only one slippage check is needed
-        uint256 redeemed = fromVault.withdraw(shares, address(this), 1);
+        uint256 redeemed = fromVault.withdraw(shares, address(this));
         return deposit(toVault, redeemed, to, minSharesOut);
+    }
+
+    //-------- MIGRATEV2 FUNCTIONS WITH DEFAULT VALUES --------\\
+
+    function migrateV2(
+        IYearnV2 fromVault,
+        IYearn4626 toVault,
+        uint256 shares,
+        address to
+    ) external payable returns (uint256 sharesOut) {
+        return migrateV2(fromVault, toVault, shares, to, 0);
+    }
+
+    function migrateV2(
+        IYearnV2 fromVault,
+        IYearn4626 toVault,
+        uint256 shares
+    ) external payable returns (uint256 sharesOut) {
+        return migrateV2(fromVault, toVault, shares, msg.sender, 0);
+    }
+
+    function migrateV2(
+        IYearnV2 fromVault,
+        IYearn4626 toVault
+    ) external payable returns (uint256 sharesOut) {
+        uint256 shares = fromVault.balanceOf(msg.sender);
+        return migrateV2(fromVault, toVault, shares, msg.sender, 0);
     }
 
     /// @inheritdoc IYearn4626Router

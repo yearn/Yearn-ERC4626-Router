@@ -2,7 +2,7 @@ pragma solidity 0.8.10;
 
 import {ERC20, MockERC20} from "solmate/test/utils/mocks/MockERC20.sol";
 
-import {MockYearn4626} from "./mocks/MockYearn4626.sol";
+import {MockYearnV3} from "./mocks/MockYearnV3.sol";
 import {WETH} from "solmate/tokens/WETH.sol";
 
 import {IYearn4626Router, Yearn4626Router} from "../Yearn4626Router.sol";
@@ -30,12 +30,12 @@ contract ERC4626Test is DSTestPlus {
     function setUp() public {
         underlying = new MockERC20("Mock Token", "TKN", 18);
 
-        vault = IYearn4626(address(new MockYearn4626(underlying)));
-        toVault = IYearn4626(address(new MockYearn4626(underlying)));
+        vault = IYearn4626(address(new MockYearnV3(underlying)));
+        toVault = IYearn4626(address(new MockYearnV3(underlying)));
 
         weth = IWETH9(address(new WETH()));
 
-        wethVault = IYearn4626(address(new MockYearn4626(weth)));
+        wethVault = IYearn4626(address(new MockYearnV3(weth)));
 
         router = new Yearn4626Router("", weth); // empty reverse ens
     }

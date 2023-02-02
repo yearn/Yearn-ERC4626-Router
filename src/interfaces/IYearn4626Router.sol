@@ -70,9 +70,16 @@ interface IYearn4626Router {
     ) external payable returns (uint256 sharesOut);
 
     /**
-     @notice migrate from Yearn V2 vault to a V3 vault
+     @notice migrate from Yearn V2 vault to a V3 vault'.
+     @param fromVault The Yearn V2 vault to withdraw from.
+     @param toVault The Yearn V3 vault to deposit assets to.
+     @param shares The amount of V2 shares to redeem form 'fromVault'.
+     @param to The destination of ownership shares
+     @param minSharesOut The min amount of 'toVault' shares to be received by 'to'.
+     @return sharesOut The actual amount of 'toVault' shares received by 'to'.
+     @dev throws MinAmountError, MinSharesError. Can call with only 'fromVault' and 'toVault' to migrate max.
     */
-    function migrateFromV2(
+    function migrateV2(
         IYearnV2 fromVault,
         IYearn4626 toVault,
         uint256 shares,
