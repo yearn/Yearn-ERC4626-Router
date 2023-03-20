@@ -5,7 +5,7 @@ import {ERC20} from "solmate/tokens/ERC20.sol";
 import {ERC4626} from "solmate/mixins/ERC4626.sol";
 import {MockStrategy} from "./MockStrategy.sol";
 
-contract MockYearnV3 is ERC4626 {
+contract MockVaultV3 is ERC4626 {
     struct StrategyParams {
         uint256 activation;
         uint256 last_report;
