@@ -17,7 +17,10 @@ interface Assume {
 // TODO:
 //      Migrate from V2 version
 //      Each version of the same function with defaults
+<<<<<<< HEAD
 //      Each revert message
+=======
+>>>>>>> build: remove stacks
 
 contract ERC4626Test is DSTestPlus {
     MockERC20 underlying;
@@ -191,7 +194,11 @@ contract ERC4626Test is DSTestPlus {
 
         router.approve(underlying, address(vault), amount);
 
+<<<<<<< HEAD
         hevm.expectRevert("!MinShares");
+=======
+        hevm.expectRevert(abi.encodeWithSignature("MinSharesError()"));
+>>>>>>> build: remove stacks
         router.depositToVault(IERC4626(address(vault)), amount, address(this), amount + 1);
     }
 
@@ -493,7 +500,11 @@ contract ERC4626Test is DSTestPlus {
 
         vault.approve(address(router), amount);
 
+<<<<<<< HEAD
         hevm.expectRevert("!MinAmount");
+=======
+        hevm.expectRevert(abi.encodeWithSignature("MinAmountError()"));
+>>>>>>> build: remove stacks
         router.redeem(IERC4626(address(vault)), amount, address(this), amount + 1);
     }
 
