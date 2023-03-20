@@ -1,4 +1,4 @@
-# YearnV3 ERC4626 Router
+# Yearn ERC4626 Router
 
 This repository contains an open-source ERC4626 Router implementation specific to the Yearn V3 vaults using [EIP-4626](https://eips.ethereum.org/EIPS/eip-4626), including ERC4626Router (the canonical ERC-4626 multicall router). Powered by [forge](https://github.com/gakonst/foundry/tree/master/forge) and [solmate](https://github.com/Rari-Capital/solmate).
 
@@ -22,7 +22,7 @@ Basic supported features include:
 
 Ultimately the ERC4626 router can support an arbitrary number of withdrawals, deposits, and even distinct token types in a single call, subject to the block gas limit.
 
-The router is split between the base [ERC4626RouterBase](https://github.com/fei-protocol/ERC4626/blob/main/src/ERC4626RouterBase.sol) which only handles the ERC4626 mutable methods (deposit/withdraw/mint/redeem) and the main router [ERC4626Router](https://github.com/fei-protocol/ERC4626/blob/main/src/ERC4626Router.sol) which includes support for common routing flows and max logic.
+The router is split between the base [ERC4626RouterBase](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626RouterBase.sol) which only handles the ERC4626 mutable methods (deposit/withdraw/mint/redeem) and the main router [ERC4626Router](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626Router.sol) which includes support for common routing flows and max logic.
 
 ### Using the Router
 The router is a multicall-style router, meaning it can atomically perform any number of supported actions on behalf of the message sender.
@@ -49,26 +49,15 @@ It is REQUIRED to use multicall to interact across multi-step user flows. The ro
 It is recommended to max approve vaults, and check whether a vault is already approved before interacting with the vault. This can save user gas. In cases where the number of required steps in a user flow is reduced to 1, a direct call can be used instead of multicall.
 
 ---
-The router will be immutably deployed to `router.4626.eth` as soon as the contracts are frozen and reviewed.
+[ERC4626RouterBase](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626RouterBase.sol) - basic ERC4626 methods
 
-[ERC4626RouterBase](https://github.com/fei-protocol/ERC4626/blob/main/src/ERC4626RouterBase.sol) - basic ERC4626 methods
+[ERC4626Router](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626Router.sol) - combined ERC4626 methods
 
-[ERC4626Router](https://github.com/fei-protocol/ERC4626/blob/main/src/ERC4626Router.sol) - combined ERC4626 methods
+[PeripheryPayments](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/external/PeripheryPayments.sol) - WETH and ERC-20 utility methods
 
-[PeripheryPayments](https://github.com/fei-protocol/ERC4626/blob/main/src/external/PeripheryPayments.sol) - WETH and ERC-20 utility methods
+[Multicall](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/external/Multicall.sol) - multicall utility
 
-[Multicall](https://github.com/fei-protocol/ERC4626/blob/main/src/external/Multicall.sol) - multicall utility
+[SelfPermit](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/external/SelfPermit.sol) - user approvals to the router with EIP-712 and EIP-2612
 
-[SelfPermit](https://github.com/fei-protocol/ERC4626/blob/main/src/external/SelfPermit.sol) - user approvals to the router with EIP-712 and EIP-2612
-
-### Extending the Router
-
-The router can be imported and extended. Many ERC-4626 use cases include additional methods which may want to be included in a multicall router.
-
-Importing via npm: **coming soon**
-Importing via [forge](https://github.com/gakonst/foundry/tree/master/forge): `forge install Fei-Protocol/ERC4626`
-
-Examples:
-* [Tribe Turbo - TurboRouter](https://github.com/fei-protocol/tribe-turbo/blob/main/src/TurboRouter.sol)
 
 
