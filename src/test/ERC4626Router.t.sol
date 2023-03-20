@@ -17,6 +17,7 @@ interface Assume {
 // TODO:
 //      Migrate from V2 version
 //      Each version of the same function with defaults
+//      Each revert message
 
 contract ERC4626Test is DSTestPlus {
     MockERC20 underlying;
@@ -190,7 +191,7 @@ contract ERC4626Test is DSTestPlus {
 
         router.approve(underlying, address(vault), amount);
 
-        hevm.expectRevert(abi.encodeWithSignature("MinSharesError()"));
+        hevm.expectRevert("!MinShares");
         router.depositToVault(IERC4626(address(vault)), amount, address(this), amount + 1);
     }
 
@@ -233,7 +234,7 @@ contract ERC4626Test is DSTestPlus {
 
         vault.approve(address(router), type(uint256).max);
 
-        hevm.expectRevert(abi.encodeWithSignature("MinSharesError()"));
+        hevm.expectRevert("!MinShares");
         router.withdrawToDeposit(vault, toVault, amount, address(this), amount, amount + 1);
     }
 
@@ -276,7 +277,7 @@ contract ERC4626Test is DSTestPlus {
 
         vault.approve(address(router), type(uint256).max);
 
-        hevm.expectRevert(abi.encodeWithSignature("MinSharesError()"));
+        hevm.expectRevert("!MinShares");
         router.migrate(vault, toVault, amount, address(this), amount + 1);
     }
 
@@ -492,7 +493,7 @@ contract ERC4626Test is DSTestPlus {
 
         vault.approve(address(router), amount);
 
-        hevm.expectRevert(abi.encodeWithSignature("MinAmountError()"));
+        hevm.expectRevert("!MinAmount");
         router.redeem(IERC4626(address(vault)), amount, address(this), amount + 1);
     }
 

@@ -25,9 +25,7 @@ abstract contract Yearn4626RouterBase is
         address to,
         uint256 maxAmountIn
     ) public payable virtual override returns (uint256 amountIn) {
-        if ((amountIn = vault.mint(shares, to)) > maxAmountIn) {
-            revert MaxAmountError();
-        }
+        require ((amountIn = vault.mint(shares, to)) <= maxAmountIn, "!MaxAmount");
     }
 
     /// @inheritdoc IERC4626RouterBase
@@ -37,9 +35,7 @@ abstract contract Yearn4626RouterBase is
         address to,
         uint256 minSharesOut
     ) public payable virtual override returns (uint256 sharesOut) {
-        if ((sharesOut = vault.deposit(amount, to)) < minSharesOut) {
-            revert MinSharesError();
-        }
+        require ((sharesOut = vault.deposit(amount, to)) >= minSharesOut, "!MinShares");
     }
 
     /// @inheritdoc IERC4626RouterBase
@@ -49,9 +45,7 @@ abstract contract Yearn4626RouterBase is
         address to,
         uint256 maxSharesOut
     ) public payable virtual override returns (uint256 sharesOut) {
-        if ((sharesOut = vault.withdraw(amount, to, msg.sender)) > maxSharesOut) {
-            revert MaxSharesError();
-        }
+        require ((sharesOut = vault.withdraw(amount, to, msg.sender)) <= maxSharesOut, "!MaxShares");
     }
 
     /// @inheritdoc IERC4626RouterBase
@@ -61,8 +55,6 @@ abstract contract Yearn4626RouterBase is
         address to,
         uint256 minAmountOut
     ) public payable virtual override returns (uint256 amountOut) {
-        if ((amountOut = vault.redeem(shares, to, msg.sender)) < minAmountOut) {
-            revert MinAmountError();
-        }
+        require ((amountOut = vault.redeem(shares, to, msg.sender)) >= minAmountOut, "!MinAmount");
     }
 }

@@ -17,19 +17,6 @@ import "./IERC4626.sol";
  There are no built in protections for unexpected behavior beyond enforcing the minSharesOut is received.
  */
 interface IERC4626RouterBase {
-    /************************** Errors **************************/
-
-    /// @notice thrown when amount of assets received is below the min set by caller
-    error MinAmountError();
-
-    /// @notice thrown when amount of shares received is below the min set by caller
-    error MinSharesError();
-
-    /// @notice thrown when amount of assets received is above the max set by caller
-    error MaxAmountError();
-
-    /// @notice thrown when amount of shares received is above the max set by caller
-    error MaxSharesError();
 
     /************************** Mint **************************/
 

@@ -29,21 +29,21 @@ contract Yearn4626Router is IERC4626Router, Yearn4626RouterBase {
         return deposit(vault, amount, to, minSharesOut);
     }
 
-    //-------- DEPOSIT FUNCTIONS WITH DEFAULT VALUES --------\\
+    //-------- DEPOSIT FUNCTIONS WITH DEFAULT VALUES --------\\ 
 
     function depositToVault(
         IERC4626 vault,
         uint256 amount,
-        address to
+        uint256 minSharesOut
     ) external payable returns (uint256 sharesOut) {
-        return depositToVault(vault, amount, to, 0);
+        return depositToVault(vault, amount, msg.sender, minSharesOut);
     }
 
     function depositToVault(
         IERC4626 vault, 
-        uint256 amount
+        uint256 minSharesOut
     ) external payable returns (uint256 sharesOut) {
-        return depositToVault(vault, amount, msg.sender, 0);
+        return depositToVault(vault, ERC20(vault.asset()).balanceOf(msg.sender), msg.sender, minSharesOut);
     }
 
     function depositToVault(
