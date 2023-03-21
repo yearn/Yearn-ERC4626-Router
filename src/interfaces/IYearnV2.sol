@@ -2,8 +2,8 @@
 pragma solidity 0.8.10;
 
 interface IYearnV2 {
-    function balanceOf(address _owner) external view returns(uint256);
-    
+    function balanceOf(address _owner) external view returns (uint256);
+
     // NOTE: Vyper produces multiple signatures for a given function with "default" args
     function withdraw() external returns (uint256);
 
@@ -11,5 +11,9 @@ interface IYearnV2 {
 
     function withdraw(uint256 maxShares, address recipient) external returns (uint256);
 
-    function withdraw(uint256 maxShares, address recipient, uint256 maxLoss) external returns (uint256);
+    function withdraw(
+        uint256 maxShares,
+        address recipient,
+        uint256 maxLoss
+    ) external returns (uint256);
 }

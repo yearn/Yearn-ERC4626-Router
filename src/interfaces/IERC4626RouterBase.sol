@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.10;
 
-import "./IYearn4626.sol";
+import "./IERC4626.sol";
 
 /** 
  @title ERC4626Router Base Interface
@@ -16,21 +16,7 @@ import "./IYearn4626.sol";
  The router makes no special considerations for unique ERC20 implementations such as fee on transfer. 
  There are no built in protections for unexpected behavior beyond enforcing the minSharesOut is received.
  */
-interface IYearn4626RouterBase {
-    /************************** Errors **************************/
-
-    /// @notice thrown when amount of assets received is below the min set by caller
-    error MinAmountError();
-
-    /// @notice thrown when amount of shares received is below the min set by caller
-    error MinSharesError();
-
-    /// @notice thrown when amount of assets received is above the max set by caller
-    error MaxAmountError();
-
-    /// @notice thrown when amount of shares received is above the max set by caller
-    error MaxSharesError();
-
+interface IERC4626RouterBase {
     /************************** Mint **************************/
 
     /** 
@@ -43,7 +29,7 @@ interface IYearn4626RouterBase {
      @dev throws MaxAmountError   
     */
     function mint(
-        IYearn4626 vault,
+        IERC4626 vault,
         uint256 shares,
         address to,
         uint256 maxAmountIn
@@ -61,7 +47,7 @@ interface IYearn4626RouterBase {
      @dev throws MinSharesError   
     */
     function deposit(
-        IYearn4626 vault,
+        IERC4626 vault,
         uint256 amount,
         address to,
         uint256 minSharesOut
@@ -79,7 +65,7 @@ interface IYearn4626RouterBase {
      @dev throws MaxSharesError   
     */
     function withdraw(
-        IYearn4626 vault,
+        IERC4626 vault,
         uint256 amount,
         address to,
         uint256 minSharesOut
@@ -97,7 +83,7 @@ interface IYearn4626RouterBase {
      @dev throws MinAmountError   
     */
     function redeem(
-        IYearn4626 vault,
+        IERC4626 vault,
         uint256 shares,
         address to,
         uint256 minAmountOut
