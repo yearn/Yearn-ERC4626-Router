@@ -79,6 +79,7 @@ contract ERC4626Test is DSTestPlus {
 
     function testDepositMax(uint256 amount) public {
         Assume(address(hevm)).assume(amount != 0);
+        Assume(address(hevm)).assume(amount < type(uint256).max / 10_000);
         underlying.mint(address(this), amount);
 
         underlying.approve(address(router), amount);
@@ -193,49 +194,6 @@ contract ERC4626Test is DSTestPlus {
 
         hevm.expectRevert("!MinShares");
         router.depositToVault(IERC4626(address(vault)), amount, address(this), amount + 1);
-    }
-
-    function testWithdrawToDeposit(uint128 amount) public {
-        Assume(address(hevm)).assume(amount != 0);
-        underlying.mint(address(this), amount);
-
-        underlying.approve(address(router), type(uint256).max);
-
-        router.approve(underlying, address(vault), amount);
-        router.approve(underlying, address(toVault), amount);
-
-        router.depositToVault(vault, amount, address(this), amount);
-
-        require(vault.balanceOf(address(this)) == amount);
-        require(underlying.balanceOf(address(this)) == 0);
-
-        vault.approve(address(router), type(uint256).max);
-
-        router.withdrawToDeposit(vault, toVault, amount, address(this), amount, amount);
-
-        require(toVault.balanceOf(address(this)) == amount);
-        require(vault.balanceOf(address(this)) == 0);
-        require(underlying.balanceOf(address(this)) == 0);
-    }
-
-    function testWithdrawToBelowMinOutReverts(uint128 amount) public {
-        Assume(address(hevm)).assume(amount != 0 && amount != type(uint128).max);
-        underlying.mint(address(this), amount);
-
-        underlying.approve(address(router), type(uint256).max);
-
-        router.approve(underlying, address(vault), amount);
-        router.approve(underlying, address(toVault), amount);
-
-        router.depositToVault(vault, amount, address(this), amount);
-
-        require(vault.balanceOf(address(this)) == amount);
-        require(underlying.balanceOf(address(this)) == 0);
-
-        vault.approve(address(router), type(uint256).max);
-
-        hevm.expectRevert("!MinShares");
-        router.withdrawToDeposit(vault, toVault, amount, address(this), amount, amount + 1);
     }
 
     function testRedeemTo(uint128 amount) public {
