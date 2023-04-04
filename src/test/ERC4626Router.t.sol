@@ -16,9 +16,6 @@ interface Assume {
     function assume(bool) external;
 }
 
-// TODO:
-//      Each revert message
-
 contract ERC4626Test is DSTestPlus {
     MockERC20 underlying;
     IERC4626 vault;
