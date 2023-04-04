@@ -100,17 +100,18 @@ contract Yearn4626Router is IERC4626Router, Yearn4626RouterBase {
         IERC4626 fromVault,
         IERC4626 toVault,
         uint256 shares,
-        address to
+        uint256 minSharesOut
     ) external payable returns (uint256 sharesOut) {
-        return migrate(fromVault, toVault, shares, to, 0);
+        return migrate(fromVault, toVault, shares, msg.sender, minSharesOut);
     }
 
     function migrate(
         IERC4626 fromVault,
         IERC4626 toVault,
-        uint256 shares
+        uint256 minSharesOut
     ) external payable returns (uint256 sharesOut) {
-        return migrate(fromVault, toVault, shares, msg.sender, 0);
+        uint256 shares = fromVault.balanceOf(msg.sender);
+        return migrate(fromVault, toVault, shares, msg.sender, minSharesOut);
     }
 
     function migrate(
@@ -129,6 +130,8 @@ contract Yearn4626Router is IERC4626Router, Yearn4626RouterBase {
         address to,
         uint256 minSharesOut
     ) public payable override returns (uint256 sharesOut) {
+        // V2 can't specify owner so we need to first pull the shares
+        fromVault.transferFrom(msg.sender, address(this), shares);
         // amount out passes through so only one slippage check is needed
         uint256 redeemed = fromVault.withdraw(shares, address(this));
         return deposit(toVault, redeemed, to, minSharesOut);
@@ -140,17 +143,18 @@ contract Yearn4626Router is IERC4626Router, Yearn4626RouterBase {
         IYearnV2 fromVault,
         IERC4626 toVault,
         uint256 shares,
-        address to
+        uint256 minSharesOut
     ) external payable returns (uint256 sharesOut) {
-        return migrateV2(fromVault, toVault, shares, to, 0);
+        return migrateV2(fromVault, toVault, shares, msg.sender, minSharesOut);
     }
 
     function migrateV2(
         IYearnV2 fromVault,
         IERC4626 toVault,
-        uint256 shares
+        uint256 minSharesOut
     ) external payable returns (uint256 sharesOut) {
-        return migrateV2(fromVault, toVault, shares, msg.sender, 0);
+        uint256 shares = fromVault.balanceOf(msg.sender);
+        return migrateV2(fromVault, toVault, shares, msg.sender, minSharesOut);
     }
 
     function migrateV2(
