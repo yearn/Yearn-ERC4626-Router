@@ -17,6 +17,7 @@ contract Yearn4626Router is IERC4626Router, Yearn4626RouterBase {
         _name = bytes32(abi.encodePacked(_name_));
     }
 
+    // Getter function to unpack stored name.
     function name() external view returns(string memory) {
         return string(abi.encodePacked(_name));
     }

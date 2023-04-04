@@ -18,7 +18,7 @@ interface IERC4626Router {
      @param amount The amount of assets to deposit to `vault`.
      @param minSharesOut The min amount of `vault` shares received by `to`.
      @return sharesOut the amount of shares received by `to`.
-     @dev throws MinSharesError. Can call with just 'vault' to deposit max.
+     @dev throws "!minShares" Error. Can call with just 'vault' to deposit max.
     */
     function depositToVault(
         IERC4626 vault,
@@ -37,7 +37,7 @@ interface IERC4626Router {
      @param to The destination of ownership shares.
      @param minSharesOut The min amount of toVault shares received by `to`.
      @return sharesOut the amount of shares received by `to`.
-     @dev throws MinAmountError, MinSharesError. Can call with only 'fromVault' and 'toVault' to migrate max.
+     @dev throws "!minAmount", "!minShares" Errors. Can call with only 'fromVault' and 'toVault' to migrate max.
     */
     function migrate(
         IERC4626 fromVault,
@@ -55,7 +55,7 @@ interface IERC4626Router {
      @param to The destination of ownership shares
      @param minSharesOut The min amount of 'toVault' shares to be received by 'to'.
      @return sharesOut The actual amount of 'toVault' shares received by 'to'.
-     @dev throws MinAmountError, MinSharesError. Can call with only 'fromVault' and 'toVault' to migrate max.
+     @dev throws "!minAmount", "!minShares" Errors. Can call with only 'fromVault' and 'toVault' to migrate max.
     */
     function migrateV2(
         IYearnV2 fromVault,

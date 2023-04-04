@@ -26,7 +26,7 @@ interface IERC4626RouterBase {
      @param to The destination of ownership shares.
      @param maxAmountIn The max amount of assets used to mint.
      @return amountIn the amount of assets used to mint by `to`.
-     @dev throws MaxAmountError   
+     @dev throws "!maxAmount" Error   
     */
     function mint(
         IERC4626 vault,
@@ -44,7 +44,7 @@ interface IERC4626RouterBase {
      @param to The destination of ownership shares.
      @param minSharesOut The min amount of `vault` shares received by `to`.
      @return sharesOut the amount of shares received by `to`.
-     @dev throws MinSharesError   
+     @dev throws "!minShares" Error   
     */
     function deposit(
         IERC4626 vault,
@@ -62,7 +62,7 @@ interface IERC4626RouterBase {
      @param to The destination of assets.
      @param minSharesOut The min amount of shares received by `to`.
      @return sharesOut the amount of shares received by `to`.
-     @dev throws MaxSharesError   
+     @dev throws !maxShares" Error   
     */
     function withdraw(
         IERC4626 vault,
@@ -80,7 +80,7 @@ interface IERC4626RouterBase {
      @param to The destination of assets.
      @param minAmountOut The min amount of assets received by `to`.
      @return amountOut the amount of assets received by `to`.
-     @dev throws MinAmountError   
+     @dev throws "!minAmount" Error   
     */
     function redeem(
         IERC4626 vault,
