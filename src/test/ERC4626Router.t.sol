@@ -192,7 +192,7 @@ contract ERC4626Test is DSTestPlus {
 
         router.approve(underlying, address(vault), amount);
 
-        hevm.expectRevert(abi.encodeWithSignature("MinSharesError()"));
+        hevm.expectRevert("!MinShares");
         router.depositToVault(IERC4626(address(vault)), amount, address(this), amount + 1);
     }
 
@@ -451,7 +451,7 @@ contract ERC4626Test is DSTestPlus {
 
         vault.approve(address(router), amount);
 
-        hevm.expectRevert(abi.encodeWithSignature("MinAmountError()"));
+        hevm.expectRevert("!MinAmount");
         router.redeem(IERC4626(address(vault)), amount, address(this), amount + 1);
     }
 
