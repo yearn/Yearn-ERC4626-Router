@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity 0.8.10;
+pragma solidity 0.8.18;
 
 import {ERC20} from "solmate/tokens/ERC20.sol";
 import {ERC4626} from "solmate/mixins/ERC4626.sol";
@@ -35,7 +35,7 @@ contract MockVaultV3 is ERC4626 {
     ) public returns (uint256) {
         return withdraw(assets, receiver, owner);
     }
-    
+
     /// @notice Yearn Specific "withdraw" with withdrawal stack included
     function withdraw(
         uint256 assets,
