@@ -8,4 +8,23 @@ contract MockStrategy is MockERC4626 {
 
     constructor(ERC20 underlying) MockERC4626(underlying, "Mock YearnStrategy", "mSTGY") {}
 
+    function withdraw(
+        uint256 assets,
+        address receiver,
+        address owner,
+        uint256 maxLoss
+    ) public returns (uint256) {
+        return withdraw(assets, receiver, owner);
+    }
+
+    function redeem(
+        uint256 shares,
+        address receiver,
+        address owner,
+        uint256 maxLoss
+    ) public returns (uint256) {
+        return redeem(shares, receiver, owner);
+    }
+
+
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity 0.8.10;
 
-import "./IERC4626.sol";
+import "./IYearn4626.sol";
 
 /** 
  @title ERC4626Router Base Interface
@@ -16,7 +16,7 @@ import "./IERC4626.sol";
  The router makes no special considerations for unique ERC20 implementations such as fee on transfer. 
  There are no built in protections for unexpected behavior beyond enforcing the minSharesOut is received.
  */
-interface IERC4626RouterBase {
+interface IYearn4626RouterBase {
     /************************** Mint **************************/
 
     /** 
@@ -29,7 +29,7 @@ interface IERC4626RouterBase {
      @dev throws "!maxAmount" Error   
     */
     function mint(
-        IERC4626 vault,
+        IYearn4626 vault,
         uint256 shares,
         address to,
         uint256 maxAmountIn
@@ -47,7 +47,7 @@ interface IERC4626RouterBase {
      @dev throws "!minShares" Error   
     */
     function deposit(
-        IERC4626 vault,
+        IYearn4626 vault,
         uint256 amount,
         address to,
         uint256 minSharesOut
@@ -57,35 +57,70 @@ interface IERC4626RouterBase {
 
     /** 
      @notice withdraw `amount` from an ERC4626 vault.
+     @dev Uses the default 4626 syntax, throws !maxShares" Error.
      @param vault The ERC4626 vault to withdraw assets from.
      @param amount The amount of assets to withdraw from vault.
      @param to The destination of assets.
      @param minSharesOut The min amount of shares received by `to`.
-     @return sharesOut the amount of shares received by `to`.
-     @dev throws !maxShares" Error   
+     @return sharesOut the amount of shares received by `to`. 
     */
-    function withdraw(
-        IERC4626 vault,
+    function withdrawDefault(
+        IYearn4626 vault,
         uint256 amount,
         address to,
         uint256 minSharesOut
     ) external payable returns (uint256 sharesOut);
 
+    /** 
+     @notice withdraw `amount` from an ERC4626 vault.
+     @dev Uses the Yearn specific 'maxLoss' accounting.
+     @param vault The ERC4626 vault to redeem shares from.
+     @param vault The ERC4626 vault to withdraw assets from.
+     @param amount The amount of assets to withdraw from vault.
+     @param to The destination of assets.
+     @param maxLoss The acceptable loss in Basis Points.
+     @return sharesOut the amount of shares received by `to`.
+     @dev throws "to much loss" Error   
+    */
+    function withdraw(
+        IYearn4626 vault,
+        uint256 amount,
+        address to,
+        uint256 maxLoss
+    ) external payable returns (uint256);
+
     /************************** Redeem **************************/
 
     /** 
      @notice redeem `shares` shares from an ERC4626 vault.
+     @dev Uses the default 4626 syntax, throws "!minAmount" Error.
      @param vault The ERC4626 vault to redeem shares from.
      @param shares The amount of shares to redeem from vault.
      @param to The destination of assets.
      @param minAmountOut The min amount of assets received by `to`.
      @return amountOut the amount of assets received by `to`.
-     @dev throws "!minAmount" Error   
     */
-    function redeem(
-        IERC4626 vault,
+    function redeemDefault(
+        IYearn4626 vault,
         uint256 shares,
         address to,
         uint256 minAmountOut
     ) external payable returns (uint256 amountOut);
+
+    /** 
+     @notice redeem `shares` shares from an ERC4626 vault.
+     @dev Uses the Yearn specific 'maxLoss' accounting.
+     @param vault The ERC4626 vault to redeem shares from.
+     @param shares The amount of shares to redeem from vault.
+     @param to The destination of assets.
+     @param maxLoss The acceptable loss in Basis Points.
+     @return amountOut the amount of assets received by `to`.
+     @dev throws "to much loss" Error   
+    */
+    function redeem(
+        IYearn4626 vault,
+        uint256 shares,
+        address to,
+        uint256 maxLoss
+    ) external payable returns (uint256);
 }

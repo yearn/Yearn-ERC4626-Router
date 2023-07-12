@@ -27,11 +27,21 @@ contract MockVaultV3 is ERC4626 {
         return totalAsset() + totalDebt;
     }
 
+    function withdraw(
+        uint256 assets,
+        address receiver,
+        address owner,
+        uint256 maxLoss
+    ) public returns (uint256) {
+        return withdraw(assets, receiver, owner);
+    }
+    
     /// @notice Yearn Specific "withdraw" with withdrawal stack included
     function withdraw(
         uint256 assets,
         address receiver,
         address owner,
+        uint256 maxLoss,
         address[] memory _strategies
     ) public returns (uint256 shares) {
         uint256 i;
@@ -45,11 +55,21 @@ contract MockVaultV3 is ERC4626 {
         return withdraw(assets, receiver, owner);
     }
 
+    function redeem(
+        uint256 shares,
+        address receiver,
+        address owner,
+        uint256 maxLoss
+    ) public returns (uint256) {
+        return redeem(shares, receiver, owner);
+    }
+
     /// @notice Yearn Specific "redeem" with withdrawal stack included
     function redeem(
         uint256 shares,
         address receiver,
         address owner,
+        uint256 maxLoss,
         address[] memory _strategies
     ) public returns (uint256 assets) {
         uint256 i;

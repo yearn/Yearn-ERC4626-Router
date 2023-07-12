@@ -23,19 +23,35 @@ abstract contract IYearn4626 is IERC4626 {
     /// if it has been added to the vault.
     function strategies(address strategy) external view virtual returns (StrategyParams memory);
 
+    function withdraw(
+        uint256 assets,
+        address receiver,
+        address owner,
+        uint256 maxLoss
+    ) external virtual returns (uint256 shares);
+
     /// @notice Yearn Specific "withdraw" with withdrawal stack included
     function withdraw(
         uint256 assets,
         address receiver,
         address owner,
+        uint256 maxLoss,
         address[] memory strategies
     ) external virtual returns (uint256 shares);
+
+    function redeem(
+        uint256 shares,
+        address receiver,
+        address owner,
+        uint256 maxLoss
+    ) external virtual returns (uint256 assets);
 
     /// @notice Yearn Specific "redeem" with withdrawal stack included
     function redeem(
         uint256 shares,
         address receiver,
         address owner,
+        uint256 maxLoss,
         address[] memory strategies
     ) external virtual returns (uint256 assets);
 }
