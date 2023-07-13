@@ -10,19 +10,6 @@ abstract contract IYearn4626 is IERC4626 {
                     Yearn Specific Functions
     ////////////////////////////////////////////////////////*/
 
-    /// @notice Struct that holds the info for each strategy that
-    /// has been added to the vault
-    struct StrategyParams {
-        uint256 activation;
-        uint256 last_report;
-        uint256 current_debt;
-        uint256 max_debt;
-    }
-
-    /// @notice Return the StrategyParams struct for the corresponding strategy
-    /// if it has been added to the vault.
-    function strategies(address strategy) external view virtual returns (StrategyParams memory);
-
     function withdraw(
         uint256 assets,
         address receiver,

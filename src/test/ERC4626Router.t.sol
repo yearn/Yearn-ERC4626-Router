@@ -893,7 +893,7 @@ contract ERC4626Test is DSTestPlus {
 
         router.approve(underlying, address(vault), amount);
 
-        router.deposigit addtToVault(IYearn4626(address(vault)), amount, address(this), amount);
+        router.depositToVault(IYearn4626(address(vault)), amount, address(this), amount);
 
         vault.approve(address(router), amount);
 
