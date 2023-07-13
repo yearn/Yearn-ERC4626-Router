@@ -67,19 +67,17 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase {
     function redeem(
         IYearn4626 vault,
         uint256 shares,
-        uint256 minAmountOut
-    ) external payable returns (uint256 amountOut) {
-        return redeemDefault(vault, shares, msg.sender, minAmountOut);
+        uint256 maxLoss
+    ) external payable returns (uint256) {
+        return redeem(vault, shares, msg.sender, maxLoss);
     }
 
     function redeem(
         IYearn4626 vault
-    ) external payable returns (uint256 amountOut) {
+    ) external payable returns (uint256) {
         uint256 shares = vault.balanceOf(msg.sender);
-        // This give a default 1bp acceptance for loss. This is only 
-        // considered safe if the vaults PPS can not be manipulated.
-        uint256 minAmountOut = vault.previewRedeem(shares) * 9_999 / 10_000;
-        return redeemDefault(vault, shares, msg.sender, minAmountOut);
+        // This give a default 1bp acceptance for loss.
+        return redeem(vault, shares, msg.sender, 1);
     }
 
     /// @inheritdoc IYearn4626Router
@@ -91,7 +89,7 @@ contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase {
         uint256 minSharesOut
     ) public payable override returns (uint256 sharesOut) {
         // amount out passes through so only one slippage check is needed
-        uint256 amount = redeem(fromVault, shares, address(this), 0);
+        uint256 amount = redeem(fromVault, shares, address(this), 10_000);
         return deposit(toVault, amount, to, minSharesOut);
     }
 

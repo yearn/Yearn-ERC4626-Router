@@ -39,16 +39,6 @@ abstract contract Yearn4626RouterBase is
     }
 
     /// @inheritdoc IYearn4626RouterBase
-    function withdrawDefault(
-        IYearn4626 vault,
-        uint256 amount,
-        address to,
-        uint256 maxSharesOut
-    ) public payable virtual override returns (uint256 sharesOut) {
-        require ((sharesOut = vault.withdraw(amount, to, msg.sender)) <= maxSharesOut, "!MaxShares");
-    }
-
-    /// @inheritdoc IYearn4626RouterBase
     function withdraw(
         IYearn4626 vault,
         uint256 amount,
@@ -59,15 +49,15 @@ abstract contract Yearn4626RouterBase is
     }
 
     /// @inheritdoc IYearn4626RouterBase
-    function redeemDefault(
+    function withdrawDefault(
         IYearn4626 vault,
-        uint256 shares,
+        uint256 amount,
         address to,
-        uint256 minAmountOut
-    ) public payable virtual override returns (uint256 amountOut) {
-        require ((amountOut = vault.redeem(shares, to, msg.sender)) >= minAmountOut, "!MinAmount");
+        uint256 maxSharesOut
+    ) public payable virtual override returns (uint256 sharesOut) {
+        require ((sharesOut = vault.withdraw(amount, to, msg.sender)) <= maxSharesOut, "!MaxShares");
     }
- 
+
     /// @inheritdoc IYearn4626RouterBase
     function redeem(
         IYearn4626 vault,
@@ -76,5 +66,15 @@ abstract contract Yearn4626RouterBase is
         uint256 maxLoss
     ) public payable virtual override returns (uint256) {
         return vault.redeem(shares, to, msg.sender, maxLoss);
+    }
+
+    /// @inheritdoc IYearn4626RouterBase
+    function redeemDefault(
+        IYearn4626 vault,
+        uint256 shares,
+        address to,
+        uint256 minAmountOut
+    ) public payable virtual override returns (uint256 amountOut) {
+        require ((amountOut = vault.redeem(shares, to, msg.sender)) >= minAmountOut, "!MinAmount");
     }
 }

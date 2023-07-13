@@ -509,6 +509,23 @@ contract ERC4626Test is DSTestPlus {
         router.depositToVault(IYearn4626(address(vault)), amount, address(this), amount);
 
         vault.approve(address(router), amount);
+        router.withdraw(vault, amount, address(this), 0);
+
+        require(vault.balanceOf(address(this)) == 0);
+        require(underlying.balanceOf(address(this)) == amount);
+    }
+
+    function testWithdrawDefault(uint128 amount) public {
+        Assume(address(hevm)).assume(amount != 0);
+        underlying.mint(address(this), amount);
+
+        underlying.approve(address(router), amount);
+
+        router.approve(underlying, address(vault), amount);
+
+        router.depositToVault(IYearn4626(address(vault)), amount, address(this), amount);
+
+        vault.approve(address(router), amount);
         router.withdrawDefault(vault, amount, address(this), amount);
 
         require(vault.balanceOf(address(this)) == 0);
@@ -516,6 +533,39 @@ contract ERC4626Test is DSTestPlus {
     }
 
     function testWithdrawWithPermit(uint128 amount) public {
+        Assume(address(hevm)).assume(amount != 0);
+        underlying.mint(address(this), amount);
+
+        uint256 privateKey = 0xBEEF;
+        address owner = hevm.addr(privateKey);
+
+        underlying.approve(address(router), amount);
+
+        router.approve(underlying, address(vault), amount);
+
+        router.depositToVault(IYearn4626(address(vault)), amount, owner, amount);
+
+        (uint8 v, bytes32 r, bytes32 s) = hevm.sign(
+            privateKey,
+            keccak256(
+                abi.encodePacked(
+                    "\x19\x01",
+                    vault.DOMAIN_SEPARATOR(),
+                    keccak256(abi.encode(PERMIT_TYPEHASH, owner, address(router), amount, 0, block.timestamp))
+                )
+            )
+        );
+
+        vault.permit(owner, address(router), amount, block.timestamp, v, r, s);
+
+        hevm.prank(owner);
+        router.withdraw(vault, amount, owner, 0);
+
+        require(vault.balanceOf(owner) == 0);
+        require(underlying.balanceOf(owner) == amount);
+    }
+
+    function testWithdrawDefaultWithPermit(uint128 amount) public {
         Assume(address(hevm)).assume(amount != 0);
         underlying.mint(address(this), amount);
 
@@ -583,7 +633,42 @@ contract ERC4626Test is DSTestPlus {
         require(underlying.balanceOf(owner) == amount);
     }
 
-    function testFailWithdrawAboveMaxOut(uint128 amount) public {
+    function testWithdrawDefaultWithPermitViaMulticall(uint128 amount) public {
+        Assume(address(hevm)).assume(amount != 0);
+        underlying.mint(address(this), amount);
+
+        uint256 privateKey = 0xBEEF;
+        address owner = hevm.addr(privateKey);
+
+        underlying.approve(address(router), amount);
+
+        router.approve(underlying, address(vault), amount);
+
+        router.depositToVault(IYearn4626(address(vault)), amount, owner, amount);
+
+        (uint8 v, bytes32 r, bytes32 s) = hevm.sign(
+            privateKey,
+            keccak256(
+                abi.encodePacked(
+                    "\x19\x01",
+                    vault.DOMAIN_SEPARATOR(),
+                    keccak256(abi.encode(PERMIT_TYPEHASH, owner, address(router), amount, 0, block.timestamp))
+                )
+            )
+        );
+
+        bytes[] memory data = new bytes[](2);
+        data[0] = abi.encodeWithSelector(SelfPermit.selfPermit.selector, vault, amount, block.timestamp, v, r, s);
+        data[1] = abi.encodeWithSelector(IYearn4626RouterBase.withdrawDefault.selector, vault, amount, owner, amount);
+
+        hevm.prank(owner);
+        router.multicall(data);
+
+        require(vault.balanceOf(owner) == 0);
+        require(underlying.balanceOf(owner) == amount);
+    }
+
+    function testFailWithdrawDefaultAboveMaxOut(uint128 amount) public {
         Assume(address(hevm)).assume(amount != 0);
         underlying.mint(address(this), amount);
 
@@ -597,6 +682,23 @@ contract ERC4626Test is DSTestPlus {
     }
 
     function testRedeem(uint128 amount) public {
+        Assume(address(hevm)).assume(amount != 0);
+        underlying.mint(address(this), amount);
+
+        underlying.approve(address(router), amount);
+
+        router.approve(underlying, address(vault), amount);
+
+        router.depositToVault(IYearn4626(address(vault)), amount, address(this), amount);
+
+        vault.approve(address(router), amount);
+        router.redeem(vault, amount, address(this), 0);
+
+        require(vault.balanceOf(address(this)) == 0);
+        require(underlying.balanceOf(address(this)) == amount);
+    }
+
+    function testRedeemDefault(uint128 amount) public {
         Assume(address(hevm)).assume(amount != 0);
         underlying.mint(address(this), amount);
 
@@ -624,7 +726,7 @@ contract ERC4626Test is DSTestPlus {
         router.depositToVault(IYearn4626(address(vault)), amount, address(this), amount);
 
         vault.approve(address(router), amount);
-        router.redeem(vault, amount, amount);
+        router.redeem(vault, amount, 0);
 
         require(vault.balanceOf(address(this)) == 0);
         require(underlying.balanceOf(address(this)) == amount);
@@ -648,6 +750,39 @@ contract ERC4626Test is DSTestPlus {
     }
 
     function testRedeemWithPermit(uint128 amount) public {
+        Assume(address(hevm)).assume(amount != 0);
+        underlying.mint(address(this), amount);
+
+        uint256 privateKey = 0xBEEF;
+        address owner = hevm.addr(privateKey);
+
+        underlying.approve(address(router), amount);
+
+        router.approve(underlying, address(vault), amount);
+
+        router.depositToVault(IYearn4626(address(vault)), amount, owner, amount);
+
+        (uint8 v, bytes32 r, bytes32 s) = hevm.sign(
+            privateKey,
+            keccak256(
+                abi.encodePacked(
+                    "\x19\x01",
+                    vault.DOMAIN_SEPARATOR(),
+                    keccak256(abi.encode(PERMIT_TYPEHASH, owner, address(router), amount, 0, block.timestamp))
+                )
+            )
+        );
+
+        vault.permit(owner, address(router), amount, block.timestamp, v, r, s);
+
+        hevm.prank(owner);
+        router.redeem(vault, amount, owner, 0);
+
+        require(vault.balanceOf(owner) == 0);
+        require(underlying.balanceOf(owner) == amount);
+    }
+
+    function testRedeemdefaultWithPermit(uint128 amount) public {
         Assume(address(hevm)).assume(amount != 0);
         underlying.mint(address(this), amount);
 
@@ -715,6 +850,41 @@ contract ERC4626Test is DSTestPlus {
         require(underlying.balanceOf(owner) == amount);
     }
 
+    function testRedeemDefaultWithPermitViaMulticall(uint128 amount) public {
+        Assume(address(hevm)).assume(amount != 0);
+        underlying.mint(address(this), amount);
+
+        uint256 privateKey = 0xBEEF;
+        address owner = hevm.addr(privateKey);
+
+        underlying.approve(address(router), amount);
+
+        router.approve(underlying, address(vault), amount);
+
+        router.depositToVault(IYearn4626(address(vault)), amount, owner, amount);
+
+        (uint8 v, bytes32 r, bytes32 s) = hevm.sign(
+            privateKey,
+            keccak256(
+                abi.encodePacked(
+                    "\x19\x01",
+                    vault.DOMAIN_SEPARATOR(),
+                    keccak256(abi.encode(PERMIT_TYPEHASH, owner, address(router), amount, 0, block.timestamp))
+                )
+            )
+        );
+
+        bytes[] memory data = new bytes[](2);
+        data[0] = abi.encodeWithSelector(SelfPermit.selfPermit.selector, vault, amount, block.timestamp, v, r, s);
+        data[1] = abi.encodeWithSelector(IYearn4626RouterBase.redeemDefault.selector, vault, amount, owner, amount);
+
+        hevm.prank(owner);
+        router.multicall(data);
+
+        require(vault.balanceOf(owner) == 0);
+        require(underlying.balanceOf(owner) == amount);
+    }
+
     function testRedeemBelowMinOutReverts(uint128 amount) public {
         Assume(address(hevm)).assume(amount != 0 && amount != type(uint128).max);
         underlying.mint(address(this), amount);
@@ -723,7 +893,7 @@ contract ERC4626Test is DSTestPlus {
 
         router.approve(underlying, address(vault), amount);
 
-        router.depositToVault(IYearn4626(address(vault)), amount, address(this), amount);
+        router.deposigit addtToVault(IYearn4626(address(vault)), amount, address(this), amount);
 
         vault.approve(address(router), amount);
 
