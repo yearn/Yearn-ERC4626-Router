@@ -6,7 +6,21 @@ import "./Yearn4626RouterBase.sol";
 
 import {IYearn4626Router, IYearnV2} from "./interfaces/IYearn4626Router.sol";
 
-/// @title Yearn4626Router contract
+/**
+ * @title Yearn4626Router contract
+ * @notice
+ *  Router that is meant to be used with Yearn V3 vaults and strategies
+ *  for deposits, withdraws and migrations.
+ *  
+ *  The router was developed from the original router by FEI protocol
+ *  https://github.com/fei-protocol/ERC4626
+ *
+ *  The router is designed to be used with permit and multicall for the 
+ *  optimal experience.
+ *
+ *  NOTE: It is important to never leave tokens in the router at the 
+ *  end of a call, otherwise they can be removed by anyone.
+ */
 contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase {
     using SafeTransferLib for ERC20;
 
