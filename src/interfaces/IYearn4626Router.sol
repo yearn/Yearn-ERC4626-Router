@@ -57,7 +57,7 @@ interface IYearn4626Router {
      @return sharesOut The actual amount of 'toVault' shares received by 'to'.
      @dev throws "!minAmount", "!minShares" Errors. Can call with only 'fromVault' and 'toVault' to migrate max.
     */
-    function migrateV2(
+    function migrateFromV2(
         IYearnV2 fromVault,
         IYearn4626 toVault,
         uint256 shares,
