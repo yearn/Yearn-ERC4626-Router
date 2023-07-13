@@ -17,7 +17,9 @@ import "./IYearn4626.sol";
  There are no built in protections for unexpected behavior beyond enforcing the minSharesOut is received.
  */
 interface IYearn4626RouterBase {
-    /************************** Mint **************************/
+    /*//////////////////////////////////////////////////////////////
+                                MINT
+    //////////////////////////////////////////////////////////////*/
 
     /** 
      @notice mint `shares` from an ERC4626 vault.
@@ -35,7 +37,9 @@ interface IYearn4626RouterBase {
         uint256 maxAmountIn
     ) external payable returns (uint256 amountIn);
 
-    /************************** Deposit **************************/
+    /*//////////////////////////////////////////////////////////////
+                                DEPOSIT
+    //////////////////////////////////////////////////////////////*/
 
     /** 
      @notice deposit `amount` to an ERC4626 vault.
@@ -53,7 +57,9 @@ interface IYearn4626RouterBase {
         uint256 minSharesOut
     ) external payable returns (uint256 sharesOut);
 
-    /************************** Withdraw **************************/
+    /*//////////////////////////////////////////////////////////////
+                                WITHDRAW
+    //////////////////////////////////////////////////////////////*/
 
     /** 
      @notice withdraw `amount` from an ERC4626 vault.
@@ -89,7 +95,9 @@ interface IYearn4626RouterBase {
         uint256 minSharesOut
     ) external payable returns (uint256 sharesOut);
 
-    /************************** Redeem **************************/
+    /*//////////////////////////////////////////////////////////////
+                                REDEEM
+    //////////////////////////////////////////////////////////////*/
 
     /** 
      @notice redeem `shares` shares from an ERC4626 vault.
