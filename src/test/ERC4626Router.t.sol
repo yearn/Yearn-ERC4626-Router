@@ -333,7 +333,7 @@ contract ERC4626Test is DSTestPlus {
         router.migrate(vault, toVault, amount, address(this), amount + 1);
     }
 
-    function testMigrateV2To(uint128 amount) public {
+    function testmigrateFromV2To(uint128 amount) public {
         Assume(address(hevm)).assume(amount != 0);
         underlying.mint(address(this), amount);
 
@@ -350,14 +350,14 @@ contract ERC4626Test is DSTestPlus {
 
         v2Vault.approve(address(router), type(uint256).max);
 
-        router.migrateV2(IYearnV2(address(v2Vault)), toVault, amount, address(this), amount);
+        router.migrateFromV2(IYearnV2(address(v2Vault)), toVault, amount, address(this), amount);
 
         require(toVault.balanceOf(address(this)) == amount);
         require(v2Vault.balanceOf(address(this)) == 0);
         require(underlying.balanceOf(address(this)) == 0);
     }
 
-    function testMigrateV2NoTo(uint128 amount) public {
+    function testmigrateFromV2NoTo(uint128 amount) public {
         Assume(address(hevm)).assume(amount != 0);
         underlying.mint(address(this), amount);
 
@@ -374,14 +374,14 @@ contract ERC4626Test is DSTestPlus {
 
         v2Vault.approve(address(router), type(uint256).max);
 
-        router.migrateV2(IYearnV2(address(v2Vault)), toVault, amount, amount);
+        router.migrateFromV2(IYearnV2(address(v2Vault)), toVault, amount, amount);
 
         require(toVault.balanceOf(address(this)) == amount);
         require(v2Vault.balanceOf(address(this)) == 0);
         require(underlying.balanceOf(address(this)) == 0);
     }
 
-    function testMigrateV2NoToOrAmount(uint128 amount) public {
+    function testmigrateFromV2NoToOrAmount(uint128 amount) public {
         Assume(address(hevm)).assume(amount != 0);
         underlying.mint(address(this), amount);
 
@@ -398,14 +398,14 @@ contract ERC4626Test is DSTestPlus {
 
         v2Vault.approve(address(router), type(uint256).max);
 
-        router.migrateV2(IYearnV2(address(v2Vault)), toVault, amount);
+        router.migrateFromV2(IYearnV2(address(v2Vault)), toVault, amount);
 
         require(toVault.balanceOf(address(this)) == amount);
         require(v2Vault.balanceOf(address(this)) == 0);
         require(underlying.balanceOf(address(this)) == 0);
     }
 
-    function testMigrateV2MaxNoMin(uint128 amount) public {
+    function testmigrateFromV2MaxNoMin(uint128 amount) public {
         Assume(address(hevm)).assume(amount != 0);
         underlying.mint(address(this), amount);
 
@@ -422,14 +422,14 @@ contract ERC4626Test is DSTestPlus {
 
         v2Vault.approve(address(router), type(uint256).max);
 
-        router.migrateV2(IYearnV2(address(v2Vault)), toVault);
+        router.migrateFromV2(IYearnV2(address(v2Vault)), toVault);
 
         require(toVault.balanceOf(address(this)) == amount);
         require(v2Vault.balanceOf(address(this)) == 0);
         require(underlying.balanceOf(address(this)) == 0);
     }
 
-    function testMigrateV2ToBelowMinOutReverts(uint128 amount) public {
+    function testmigrateFromV2ToBelowMinOutReverts(uint128 amount) public {
         Assume(address(hevm)).assume(amount != 0 && amount != type(uint128).max);
         underlying.mint(address(this), amount);
 
@@ -447,10 +447,10 @@ contract ERC4626Test is DSTestPlus {
         v2Vault.approve(address(router), type(uint256).max);
 
         hevm.expectRevert("!MinShares");
-        router.migrateV2(IYearnV2(address(v2Vault)), toVault, amount, address(this), amount + 1);
+        router.migrateFromV2(IYearnV2(address(v2Vault)), toVault, amount, address(this), amount + 1);
     }
 
-    function testMigrateV2WithPermitViaMulticall(uint128 amount) public {
+    function testmigrateFromV2WithPermitViaMulticall(uint128 amount) public {
         Assume(address(hevm)).assume(amount != 0);
         underlying.mint(address(this), amount);
 
@@ -482,7 +482,7 @@ contract ERC4626Test is DSTestPlus {
         bytes[] memory data = new bytes[](2);
         data[0] = abi.encodeWithSelector(SelfPermit.selfPermit.selector, v2Vault, amount, block.timestamp, v, r, s);
         data[1] = abi.encodeWithSelector(
-            IYearn4626Router.migrateV2.selector,
+            IYearn4626Router.migrateFromV2.selector,
             IYearnV2(address(v2Vault)),
             toVault,
             amount,
