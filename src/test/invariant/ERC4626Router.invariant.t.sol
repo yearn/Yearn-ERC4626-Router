@@ -145,7 +145,7 @@ contract Handler is CommonBase, StdCheats, StdUtils {
         console.log("withdraw", calls["withdraw"]);
         console.log("redeem", calls["redeem"]);
         console.log("depositToVault", calls["depositToVault"]);
-        console.log("zero ruins ", ghost_zero);
+        console.log("zero runs ", ghost_zero);
         console.log("-------------------");
 
         console.log("Deposit amount: ", ghost_deposit);
