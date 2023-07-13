@@ -9,7 +9,9 @@ import "./IYearnV2.sol";
  @notice Extends the ERC4626RouterBase with specific flows to save gas
  */
 interface IYearn4626Router {
-    /************************** Deposit **************************/
+    /*//////////////////////////////////////////////////////////////
+                            DEPOSIT
+    //////////////////////////////////////////////////////////////*/
 
     /** 
      @notice deposit `amount` to an ERC4626 vault.
@@ -17,17 +19,20 @@ interface IYearn4626Router {
      @param to The destination of ownership shares.
      @param amount The amount of assets to deposit to `vault`.
      @param minSharesOut The min amount of `vault` shares received by `to`.
-     @return sharesOut the amount of shares received by `to`.
-     @dev throws "!minShares" Error. Can call with just 'vault' to deposit max.
+     @return . the amount of shares received by `to`.
+     @dev throws "!minShares" Error.
     */
     function depositToVault(
         IYearn4626 vault,
         uint256 amount,
         address to,
         uint256 minSharesOut
-    ) external payable returns (uint256 sharesOut);
+    ) external payable returns (uint256);
 
-    /************************** Migrate **************************/
+
+    /*//////////////////////////////////////////////////////////////
+                            MIGRATION
+    //////////////////////////////////////////////////////////////*/
 
     /** 
      @notice will redeem `shares` from one vault and deposit amountOut to a different ERC4626 vault.
@@ -36,8 +41,8 @@ interface IYearn4626Router {
      @param shares The amount of shares to redeem from fromVault.
      @param to The destination of ownership shares.
      @param minSharesOut The min amount of toVault shares received by `to`.
-     @return sharesOut the amount of shares received by `to`.
-     @dev throws "!minAmount", "!minShares" Errors. Can call with only 'fromVault' and 'toVault' to migrate max.
+     @return . the amount of shares received by `to`.
+     @dev throws "!minAmount", "!minShares" Errors.
     */
     function migrate(
         IYearn4626 fromVault,
@@ -45,7 +50,11 @@ interface IYearn4626Router {
         uint256 shares,
         address to,
         uint256 minSharesOut
-    ) external payable returns (uint256 sharesOut);
+    ) external payable returns (uint256);
+
+    /*//////////////////////////////////////////////////////////////
+                            V2 MIGRATION
+    //////////////////////////////////////////////////////////////*/
 
     /**
      @notice migrate from Yearn V2 vault to a V3 vault'.
@@ -54,8 +63,8 @@ interface IYearn4626Router {
      @param shares The amount of V2 shares to redeem form 'fromVault'.
      @param to The destination of ownership shares
      @param minSharesOut The min amount of 'toVault' shares to be received by 'to'.
-     @return sharesOut The actual amount of 'toVault' shares received by 'to'.
-     @dev throws "!minAmount", "!minShares" Errors. Can call with only 'fromVault' and 'toVault' to migrate max.
+     @return . The actual amount of 'toVault' shares received by 'to'.
+     @dev throws "!minAmount", "!minShares" Errors.
     */
     function migrateFromV2(
         IYearnV2 fromVault,
@@ -63,5 +72,5 @@ interface IYearn4626Router {
         uint256 shares,
         address to,
         uint256 minSharesOut
-    ) external payable returns (uint256 sharesOut);
+    ) external payable returns (uint256);
 }
