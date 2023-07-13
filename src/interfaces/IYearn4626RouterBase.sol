@@ -107,7 +107,7 @@ interface IYearn4626RouterBase {
         address to,
         uint256 maxLoss
     ) external payable returns (uint256);
-    
+
     /** 
      @notice redeem `shares` shares from an ERC4626 vault.
      @dev Uses the default 4626 syntax, throws "!minAmount" Error.
