@@ -4,26 +4,6 @@ This repository contains an open-source ERC4626 Router implementation specific t
 
 This repository and code was made extending the original [ERC4626 Router](https://github.com/fei-protocol/ERC4626).
 
-## About ERC-4626
-
-[EIP-4626: The Tokenized Vault Standard](https://eips.ethereum.org/EIPS/eip-4626) is an ethereum application developer interface for building token vaults and strategies. It is meant to consolidate development efforts around "single token strategies" such as lending, yield aggregators, and single-sided staking.
-
-## ERC4626Router and Base
-
-ERC-4626 standardizes the interface around depositing and withdrawing tokens from strategies.
-
-The ERC4626 Router is an ecosystem utility contract (like WETH) which can route tokens in and out of multiple ERC-4626 strategies in a single call. Its architecture was inspired by the [Uniswap V3 multicall router](https://github.com/Uniswap/v3-periphery/blob/main/contracts/SwapRouter.sol).
-
-Basic supported features include:
-* withdrawing from some Vault A and redepositing to Vault B
-* wrapping and unwrapping WETH
-* managing token approvals/transfers
-* slippage protection
-
-Ultimately the ERC4626 router can support an arbitrary number of withdrawals, deposits, and even distinct token types in a single call, subject to the block gas limit.
-
-The router is split between the base [ERC4626RouterBase](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626RouterBase.sol) which only handles the ERC4626 mutable methods (deposit/withdraw/mint/redeem) and the main router [ERC4626Router](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626Router.sol) which includes support for common routing flows and max logic.
-
 ### Using the Router
 ---
 ### **Important**
@@ -50,6 +30,27 @@ WETH vault redeem (requires the router to have ERC-20 approval of the vault shar
 - ERC4626RouterBase.withdraw (or redeem) on vault B *to* the router
 - PeripheryPayments.approve(asset, vault C, amount) approves the vault to spend asset of the router
 - ERC4626RouterBase.deposit on destination vault C
+
+## About ERC-4626
+
+[EIP-4626: The Tokenized Vault Standard](https://eips.ethereum.org/EIPS/eip-4626) is an ethereum application developer interface for building token vaults and strategies. It is meant to consolidate development efforts around "single token strategies" such as lending, yield aggregators, and single-sided staking.
+
+## ERC4626Router and Base
+
+ERC-4626 standardizes the interface around depositing and withdrawing tokens from strategies.
+
+The ERC4626 Router is an ecosystem utility contract (like WETH) which can route tokens in and out of multiple ERC-4626 strategies in a single call. Its architecture was inspired by the [Uniswap V3 multicall router](https://github.com/Uniswap/v3-periphery/blob/main/contracts/SwapRouter.sol).
+
+Basic supported features include:
+* withdrawing from some Vault A and redepositing to Vault B
+* wrapping and unwrapping WETH
+* managing token approvals/transfers
+* slippage protection
+
+Ultimately the ERC4626 router can support an arbitrary number of withdrawals, deposits, and even distinct token types in a single call, subject to the block gas limit.
+
+The router is split between the base [ERC4626RouterBase](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626RouterBase.sol) which only handles the ERC4626 mutable methods (deposit/withdraw/mint/redeem) and the main router [ERC4626Router](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626Router.sol) which includes support for common routing flows and max logic.
+
 
 [ERC4626RouterBase](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626RouterBase.sol) - basic ERC4626 methods
 
