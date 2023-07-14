@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity 0.8.10;
+pragma solidity 0.8.18;
 
-import "./IERC4626.sol";
+import "./IYearn4626.sol";
 import "./IYearnV2.sol";
 
 /** 
  @title ERC4626Router Interface
  @notice Extends the ERC4626RouterBase with specific flows to save gas
  */
-interface IERC4626Router {
+interface IYearn4626Router {
     /************************** Deposit **************************/
 
     /** 
@@ -21,7 +21,7 @@ interface IERC4626Router {
      @dev throws "!minShares" Error. Can call with just 'vault' to deposit max.
     */
     function depositToVault(
-        IERC4626 vault,
+        IYearn4626 vault,
         uint256 amount,
         address to,
         uint256 minSharesOut
@@ -40,8 +40,8 @@ interface IERC4626Router {
      @dev throws "!minAmount", "!minShares" Errors. Can call with only 'fromVault' and 'toVault' to migrate max.
     */
     function migrate(
-        IERC4626 fromVault,
-        IERC4626 toVault,
+        IYearn4626 fromVault,
+        IYearn4626 toVault,
         uint256 shares,
         address to,
         uint256 minSharesOut
@@ -57,9 +57,9 @@ interface IERC4626Router {
      @return sharesOut The actual amount of 'toVault' shares received by 'to'.
      @dev throws "!minAmount", "!minShares" Errors. Can call with only 'fromVault' and 'toVault' to migrate max.
     */
-    function migrateV2(
+    function migrateFromV2(
         IYearnV2 fromVault,
-        IERC4626 toVault,
+        IYearn4626 toVault,
         uint256 shares,
         address to,
         uint256 minSharesOut

@@ -4,6 +4,33 @@ This repository contains an open-source ERC4626 Router implementation specific t
 
 This repository and code was made extending the original [ERC4626 Router](https://github.com/fei-protocol/ERC4626).
 
+### Using the Router
+---
+### **Important**
+It is REQUIRED to use multicall to interact across multi-step user flows. The router is stateless other than holding token approvals for vaults it interacts with. Any tokens that end a transaction in the router can be permissionlessly withdrawn by any address, likely an MEV searcher, so make sure to complete all multicalls with token withdrawals to an end user address.
+
+It is recommended to max approve vaults, and check whether a vault is already approved before interacting with the vault. This can save user gas. In cases where the number of required steps in a user flow is reduced to 1, a direct call can be used instead of multicall.
+
+---
+
+The router is a multicall-style router, meaning it can atomically perform any number of supported actions on behalf of the message sender.
+
+Some example user flows are listed below.
+
+Vault deposit (requires ERC-20 approval of vault underlying asset before calling OR use a self-permit):
+- PeripheryPayments.approve(asset, vault, amount) approves the vault to spend asset of the router
+- ERC4626Router.depositToVault
+
+WETH vault redeem (requires the router to have ERC-20 approval of the vault shares before calling OR use a self-permit):
+- ERC4626Router.redeem *to* the router
+- PeripheryPayments.unwrapWETH9 *to* the user destination
+
+2 to 1 vault consolidation (requires ERC-20 approval of both source vault underlying assets OR self-permit):
+- ERC4626RouterBase.withdraw (or redeem) on vault A *to* the router
+- ERC4626RouterBase.withdraw (or redeem) on vault B *to* the router
+- PeripheryPayments.approve(asset, vault C, amount) approves the vault to spend asset of the router
+- ERC4626RouterBase.deposit on destination vault C
+
 ## About ERC-4626
 
 [EIP-4626: The Tokenized Vault Standard](https://eips.ethereum.org/EIPS/eip-4626) is an ethereum application developer interface for building token vaults and strategies. It is meant to consolidate development efforts around "single token strategies" such as lending, yield aggregators, and single-sided staking.
@@ -24,31 +51,7 @@ Ultimately the ERC4626 router can support an arbitrary number of withdrawals, de
 
 The router is split between the base [ERC4626RouterBase](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626RouterBase.sol) which only handles the ERC4626 mutable methods (deposit/withdraw/mint/redeem) and the main router [ERC4626Router](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626Router.sol) which includes support for common routing flows and max logic.
 
-### Using the Router
-The router is a multicall-style router, meaning it can atomically perform any number of supported actions on behalf of the message sender.
 
-Some example user flows are listed below.
-
-Vault deposit (requires ERC-20 approval of vault underlying asset before calling OR use a self-permit):
-- PeripheryPayments.approve(asset, vault, amount) approves the vault to spend asset of the router
-- ERC4626Router.depositToVault
-
-WETH vault redeem (requires the router to have ERC-20 approval of the vault shares before calling OR use a self-permit):
-- ERC4626Router.redeem *to* the router
-- PeripheryPayments.unwrapWETH9 *to* the user destination
-
-2 to 1 vault consolidation (requires ERC-20 approval of both source vault underlying assets OR self-permit):
-- ERC4626RouterBase.withdraw (or redeem) on vault A *to* the router
-- ERC4626RouterBase.withdraw (or redeem) on vault B *to* the router
-- PeripheryPayments.approve(asset, vault C, amount) approves the vault to spend asset of the router
-- ERC4626RouterBase.deposit on destination vault C
-
----
-It is REQUIRED to use multicall to interact across multi-step user flows. The router is stateless other than holding token approvals for vaults it interacts with. Any tokens that end a transaction in the router can be permissionlessly withdrawn by any address, likely an MEV searcher, so make sure to complete all multicalls with token withdrawals to an end user address.
-
-It is recommended to max approve vaults, and check whether a vault is already approved before interacting with the vault. This can save user gas. In cases where the number of required steps in a user flow is reduced to 1, a direct call can be used instead of multicall.
-
----
 [ERC4626RouterBase](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626RouterBase.sol) - basic ERC4626 methods
 
 [ERC4626Router](https://github.com/Schlagonia/Yearn-ERC4626-Router/blob/master/src/Yearn4626Router.sol) - combined ERC4626 methods
