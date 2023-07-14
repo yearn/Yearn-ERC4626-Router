@@ -96,7 +96,7 @@ contract Handler is CommonBase, StdCheats, StdUtils {
         vm.prank(user);
         vault.approve(address(router), amount);
         vm.prank(user);
-        router.withdraw(vault, amount, user, amount);
+        router.withdraw(vault, amount, user, 0);
 
         ghost_witdhraw += amount;
     }
@@ -114,7 +114,7 @@ contract Handler is CommonBase, StdCheats, StdUtils {
         vault.approve(address(router), shares);
 
         vm.prank(user);
-        router.redeem(vault, shares, shares);
+        router.redeem(vault, shares, 0);
 
         ghost_redeem += shares;
     }
@@ -177,6 +177,7 @@ contract ERC4626RouterInvariantTest is Test {
         assertEq(underlying.balanceOf(address(router)), 0);
         assertEq(underlying.allowance(address(handler), address(router)), 0);
         assertEq(vault.allowance(address(handler), address(router)), 0);
+        assertEq(vault.balanceOf(address(router)), 0);
         handler.callSummary();
     }
 }
