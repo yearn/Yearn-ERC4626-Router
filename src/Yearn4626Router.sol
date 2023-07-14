@@ -18,7 +18,7 @@ import {IYearn4626Router, IYearnV2} from "./interfaces/IYearn4626Router.sol";
  *  optimal experience.
  *
  *  NOTE: It is important to never leave tokens in the router at the 
- *  end of a call, otherwise they can be removed by anyone.
+ *  end of a call, otherwise they can be swept by anyone.
  */
 contract Yearn4626Router is IYearn4626Router, Yearn4626RouterBase {
     using SafeTransferLib for ERC20;

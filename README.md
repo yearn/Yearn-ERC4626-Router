@@ -1,8 +1,10 @@
 # Yearn ERC4626 Router
 
-This repository contains an open-source ERC4626 Router implementation specific to the Yearn protocol using [EIP-4626](https://eips.ethereum.org/EIPS/eip-4626), including ERC4626Router (the canonical ERC-4626 multicall router). Powered by [forge](https://github.com/gakonst/foundry/tree/master/forge) and [solmate](https://github.com/Rari-Capital/solmate).
+This repository contains an open-source ERC4626 Router implementation specific to the Yearn V3 protocol using [EIP-4626](https://eips.ethereum.org/EIPS/eip-4626), including ERC4626Router (the canonical ERC-4626 multicall router). Powered by [forge](https://github.com/gakonst/foundry/tree/master/forge) and [solmate](https://github.com/Rari-Capital/solmate).
 
 This repository and code was made extending the original [ERC4626 Router](https://github.com/fei-protocol/ERC4626).
+
+The main change is the addition of a `maxLoss` variable for `withdraw` and `redeem` calls that all Yearn V3 vaults and strategies accept as an optional parameter. As well as the addtion of `migrateFromV2` options that is compliant with Yearn V2 vaults for withdraws. There is still 4626 compliant options by using `withdrwDefault` and `redeemDefault`.
 
 ### Using the Router
 ---
