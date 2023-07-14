@@ -1,0 +1,4 @@
+[invariant]
+fail_on_revert = true
+runs = 256
+depth = 30
