@@ -1,4 +1,4 @@
-pragma solidity 0.8.10;
+pragma solidity 0.8.18;
 
 import {ERC20, MockERC20} from "solmate/test/utils/mocks/MockERC20.sol";
 
@@ -6,8 +6,8 @@ import {MockVaultV3} from "../mocks/MockVaultV3.sol";
 import {MockYearnV2} from "../mocks/MockYearnV2.sol";
 import {WETH} from "solmate/tokens/WETH.sol";
 
-import {IERC4626Router, Yearn4626Router, IYearnV2} from "../../Yearn4626Router.sol";
-import {IERC4626RouterBase, Yearn4626RouterBase, IWETH9, IERC4626, SelfPermit, PeripheryPayments} from "../../Yearn4626RouterBase.sol";
+import {Yearn4626RouterBase, IWETH9, SelfPermit, PeripheryPayments} from "../../Yearn4626RouterBase.sol";
+import {Yearn4626Router, IYearn4626Router, IYearn4626, IYearnV2} from "../../Yearn4626Router.sol";
 
 import {DSTestPlus} from "solmate/test/utils/DSTestPlus.sol";
 
@@ -18,7 +18,7 @@ import "forge-std/Test.sol";
 
 contract Handler is CommonBase, StdCheats, StdUtils {
     Yearn4626Router private router;
-    IERC4626 private vault;
+    IYearn4626 private vault;
     MockERC20 private underlying;
     address private user = address(11);
 
@@ -35,7 +35,7 @@ contract Handler is CommonBase, StdCheats, StdUtils {
         _;
     }
 
-    constructor(Yearn4626Router _router, IERC4626 _vault, MockERC20 _underlying) {
+    constructor(Yearn4626Router _router, IYearn4626 _vault, MockERC20 _underlying) {
         router = _router;
         vault = _vault;
         underlying = _underlying;
@@ -158,14 +158,14 @@ contract Handler is CommonBase, StdCheats, StdUtils {
 
 contract ERC4626RouterInvariantTest is Test {
     MockERC20 underlying;
-    IERC4626 vault;
+    IYearn4626 vault;
     Yearn4626Router router;
     IWETH9 weth;
     Handler handler;
 
     function setUp() public {
         underlying = new MockERC20("Mock Token", "TKN", 18);
-        vault = IERC4626(address(new MockVaultV3(underlying)));
+        vault = IYearn4626(address(new MockVaultV3(underlying)));
         weth = IWETH9(address(new WETH()));
         router = new Yearn4626Router("TestYearn4626Router", weth);
         handler = new Handler(router, vault, underlying);
