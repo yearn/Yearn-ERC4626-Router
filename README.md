@@ -6,6 +6,14 @@ This repository and code was made extending the original [ERC4626 Router](https:
 
 The main change is the addition of a `maxLoss` variable for `withdraw` and `redeem` calls that all Yearn V3 vaults and strategies accept as an optional parameter. As well as the addtion of `migrateFromV2` options that is compliant with Yearn V2 vaults for withdraws. There is still 4626 compliant options by using `withdrwDefault` and `redeemDefault`.
 
+## Deployments
+
+Ethereum - [0x1112dbCF805682e828606f74AB717abf4b4FD8DE](https://etherscan.io/address/0x1112dbCF805682e828606f74AB717abf4b4FD8DE)
+
+Polygon PoS - [0x1112dbCF805682e828606f74AB717abf4b4FD8DE](https://polygonscan.com/address/0x1112dbCF805682e828606f74AB717abf4b4FD8DE)
+
+Optimism - [0x1112dbCF805682e828606f74AB717abf4b4FD8DE](https://optimistic.etherscan.io/address/0x1112dbCF805682e828606f74AB717abf4b4FD8DE)
+
 ### Using the Router
 ---
 ### **Important**
