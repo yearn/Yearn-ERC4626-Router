@@ -668,7 +668,7 @@ contract ERC4626Test is DSTestPlus {
         require(underlying.balanceOf(owner) == amount);
     }
 
-    function testFailWithdrawDefaultAboveMaxOut(uint128 amount) public {
+    function test_RevertWhen_WithdrawDefaultAboveMaxOut(uint128 amount) public {
         Assume(address(hevm)).assume(amount != 0);
         underlying.mint(address(this), amount);
 
@@ -678,6 +678,7 @@ contract ERC4626Test is DSTestPlus {
         router.depositToVault(IYearn4626(address(vault)), amount, address(this), amount);
 
         vault.approve(address(router), amount);
+        hevm.expectRevert("!MaxShares");
         router.withdrawDefault(IYearn4626(address(vault)), amount, address(this), amount - 1);
     }
 
